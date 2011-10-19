@@ -1,0 +1,100 @@
+
+================================================================
+The Hook Pattern
+================================================================
+
+For calls originating from system callbacks and/or data structures,
+such frame tree messages and draw tree messages, we must hook calls
+out and back again in order to provide an opportunity for overriding.
+
+The Frame class will be used as an example.
+
+_______________________________________________________________________
+
+Inheritance diagram:
+
+
+               Frame
+                 |
+                 |
+                 |
+                 |
+                 |
+                 |
+            impl::Frame
+
+
+
+            Frame_Stowed
+                 |
+                 |
+                 |
+                 |
+                 |
+         impl::Frame_Stowed
+
+_______________________________________________________________________
+
+Containment/call diagram:
+
+impl::Frame_Stowed contains an instance of Own_Frame and an instance
+of Own_Frame_Hook.
+
+        +-----------------------------------+
+        |                                   |
+        | class: Frame_Stowed               |
+        |                                   |
+        | Frame & peek_frame() = 0          |
+        |                                   |
+        +===================================+
+        |                                   |
+        | derived class: impl::Frame_Stowed |
+        |                                   |
+   +------Frame & peek_frame()              |
+   |    |    *                              |
+   |    +---/|\-----------------------------+
+   |         |            
+   |         |
+   |         |peek_frame().foo()
+   |         |
+   |         |
+   |         |              +---------------------------------+
+   |         |              |                                 |
+   |         |              | class: Frame                    |
+   |         |              |                                 |
+   |         |              | void foo() = 0                  |
+   |         |              |                                 |
+   |         |              +=================================+
+   |         |              |                                 |
+   |         |              | derived class: Own_Frame_Hook   |
+   |         |              |                                 |
+   |         |       +--------void foo()                      |
+   |         |       |      |       *                         |
+   |         |       |      +------/|\------------------------+
+   |         |       |              |        
+   |         |       |              |        
+   +--------------------------------+        
+             |       |  
+             |       |  
+             |       |      +---------------------------------+
+             |       |      |                                 |
+             |       |      | class: impl::Frame              |
+             |       |      |                                 |
+             |       +------->void foo()                      |
+             |              |                                 |
+             |              +=================================+
+             |              |                                 |
+             |              | derived class: Own_Frame        |
+             |              |                                 |
+             +----------------void foo()                      |
+                            |       *                         |
+                            +------/|\------------------------+
+                                    |
+                                    |
+                                    |
+                                    |foo()
+                                    |
+                                    |
+                                    |
+                          (START: parent frame)
+

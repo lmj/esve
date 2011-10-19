@@ -1,0 +1,97 @@
+
+================================================================
+Structure
+================================================================
+
+packages:
+
+util.......................generic utilities
+math.......................mathematical types, functions, and constants
+surface....................surface subsystem
+geom.......................geometric objects (includes front-end to surface/)
+message....................message-passing subsystem
+kernel.....................network model built from message/
+ui/base....................platform-independent GUI (implementation is hidden)
+ui/extra...................extra GUI objects
+base.......................generic utilities for a graphics engine
+types......................concrete base types (real, complex, etc)
+engine/dimn................n-dimensional engine (base classes for 3D and 4D)
+engine/dim3................three-dimensional engine
+engine/dim4................four-dimensional engine
+components/dimn............components built from engine/dimn
+components/dim3............components built from engine/dim3
+components/dim4............components built from engine/dim4
+viewers/dimn...............base classes for viewers/dim3 and viewers/dim4
+viewers/dim3...............3D viewers built from components/dim3
+viewers/dim4...............4D viewers built from components/dim4
+
+
+dependency graph:
+
+        util
+         |\ \
+         | \ \
+         |  \ +----------------------------+
+         |   \                              \
+         |    +-----------+    math          \
+         |                 \    |\            \
+         |                  \   | \            \
+         |                   \  |  +----------+ \
+         |                    \ |              \ \
+         |                     \|               \ \
+      message                  base            surface
+         |                      |                 |
+         |                      |                 |
+         |                      |                 |
+         |                      |                 |
+      kernel                  types               |
+         |                      |\                |   
+         |                      | \               |  
+         |                      |  +----------+   |
+         |                      |              \  |
+      ui/base                   |               \ |
+         |\                     |               geom
+         | \                    |
+         |  +-------------+     |
+         |                 \    |
+         |                  \   |
+         |                 engine/dimn         
+         |                      | |  \         
+         |                      | |   \
+         |                      |  \   +------------+
+         |                      |   \                \                
+         |                      |    \                \                
+         |                      |     \                \                 
+         |                      |    engine/dim3      engine/dim4
+      ui/extra                  |         |               |
+          \                     |         |               |
+           \                    |         |               |
+            +-------------+     |         |               |
+                           \    |         |               |
+                            \   |         |               |
+                        components/dimn   |               |
+                               / |  \     |               |
+                              /  |   \    |               |
+                             /    \   +-- | --------+     |
+                            /      \      |          \    |
+                           /        \     |           \   |
+                          /          \    |            \  |
+                         /            \   |             \ |
+                        /         components/dim3    components/dim4
+                        |               /               /
+                        |              /               /
+                        |             /               /
+                  viewers/dimn       /               /
+                        |           /               /
+                        |          /               /
+                        |    +----+               /
+                        |   /                    /
+                        |  /                    /
+                  viewers/dim3                 /
+                        |                     /
+                        |                    /
+                        |    +--------------+
+                        |   / 
+                        |  /  
+                  viewers/dim4
+

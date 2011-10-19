@@ -1,0 +1,31 @@
+
+================================================================
+Hacking
+================================================================
+
+Diagnostics:
+------------
+
+Define ESVE_DIAGNOSTICS to get a readout of all messages being passed.
+Depending on your compiler environment, defining ESVE_DEMANGLE might
+demangle the class names in the readout, or might fail to compile
+altogether.
+
+You can turn diagnostics on and off with minimal recompilation by just
+touching esve/message/diagnostic.hxx.
+
+Other preprocessor symbols:
+---------------------------
+
+USE_STD_COMPLEX: use std::complex instead of esve::math::complex.  See
+esve/math/complex.hxx for (probably unjustified) reasons why esve uses
+its own complex class.
+
+USE_ANSI_CLOCK: If for some reason sys/times.h is not posixly
+available, you can try the ANSI clock.  Of course this is not ideal
+since the ANSI clock measures user time, not system time, but at least
+it's something.
+
+NDEBUG: The standard flag for turning off assertions.  Defining NDEBUG
+will also turn off template requirements, which you probably don't
+want to do until you become familiar with idioms such as Make_Frame.

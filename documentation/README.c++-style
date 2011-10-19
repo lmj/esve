@@ -1,0 +1,124 @@
+
+================================================================
+C++ style
+================================================================
+
+An effort has been made to ensure the following:
+
+- There are no global, namespace-global, local static, non-local
+static, public, or protected variables (with the exception of public
+members residing in data-only structs).
+
+- esve is fully type-safe; using it requires no casting.  Also, no
+casting is done anywhere in the implementation (with the exception of
+rare and unavoidable low-level GUI and OpenGL glue code).
+
+- Raw pointers are not used; operator delete is not called explicitly.
+
+- Raw arrays are not used; uses std::vector.
+
+- char* strings are not used; uses std::string.
+
+- Namespaces match directory layout.
+
+The following random soliloquy may or may not be comprehensible --- to
+you or to me.  Make of it what you will.
+
+-----------------------------------------------------------------------
+"Look at all these virtual bases and diamond hierarchies! Bad!"
+
+First, we can all agree that if a base class is an interface then we
+lose nothing and gain everything by making it a virtual base (overhead
+costs aside).  By 'interface' I mean a class with no data consisting
+of only pure virtuals --- the Java concept of 'interface'.
+
+OK, discarding diamonds arising from interfaces, we are left with
+diamonds whose bases are the leaves in esve's tree framework:
+Handle_Receiver, Update_Receiver, Compute_Receiver, and Draw_Receiver.
+These are nearly interfaces, consisting of a pure virtual and a
+private pointer to the parent tree-node.  There is really no debate
+here: we _never_ want an object acting as two leaves in the same tree,
+therefore we _always_ want a virtual base.
+
+-----------------------------------------------------------------------
+"This whole Make_Geom<T> thing is strange.  It produces a class
+derived from Geom!  Couldn't you refrain from such contorted template
+tricks?"
+
+The philosophy is to keep the definition of geometric objects
+low-level and independent of the engine.  Make_Geom is the glue which
+takes low-level code and automatically integrates it into the engine.
+
+Since OpenGL obviously does not do Moebius transformations natively,
+points must be transformed in code.  Here we must decide how to
+express the iterator pattern.  Of course, in C++ the natural and most
+efficient route is to use C++-style iterators.  This necessarily
+entails the use of templates.
+
+Alternatively, one could express the iterator pattern via pure
+virtuals, however this is neither C++'s style nor esve's style.
+
+One more alternative would be to use a predefined structure for vertex
+data, however I am not inclined to require such strait-jackets on the
+implementation of geometric objects.
+
+As a programming aid, Make_Frame defines several template requirements
+which are enabled whenever NDEBUG is _not_ defined.
+
+-----------------------------------------------------------------------
+"Look at these huge inline functions!  How stupid is that?"
+
+You mean those in-class member function definitions found in .cxx
+files?  A virtual function is a virtual function; it doesn't matter
+whether the compiler generates an out-of-line copy or whether you do.
+In fact the GNU compiler seems to understand this idiom and generates
+exactly the same code whether the definition is inline or out-of-line.
+Of course, my motivation here is convenience and readability.  I'll
+often even inline the constructor, which is not virtual, because in
+those cases the constructor is called just once in the file, so again
+it doesn't matter.
+
+Now, huge inline functions in header files --- that is an entirely
+different matter.  That _would_ be stupid (barring some unknown
+bizarre special situation).
+
+-----------------------------------------------------------------------
+"Why are some classes uncapitalized?"
+
+Uncapitalized classes indicate built-in or concrete types such as
+'real' and 'complex'.
+
+-----------------------------------------------------------------------
+"What's with all the methods named 'peek_*()'?"
+
+A method whose name begins with "peek" is guaranteed to always return
+the same reference (for a given instance).
+
+The interface returned (and it is always an interface) should be
+considered as being part of the class on which peek_*() was invoked.
+You are just 'peeking' at a different aspect of the class, like
+turning it over to see another side.  The interface returned is
+unassignable, so there is no loss of control over instance data.
+
+Overriding a peek_*() method should be done with delegation rather
+than by replacing the object wholesale.  That is, behavior should be
+modified using the existing underlying data.
+
+-----------------------------------------------------------------------
+"It's confusing to reuse the same class names, for example Foo and
+impl::Foo."
+
+This is my own style of coping with evolution.  I first write a class
+Foo; when Foo becomes popular enough to warrant an alternate
+implementation (such as delegation), I strip it down to an interface
+and kick the implementation into the impl/ directory.  This is the
+least tumultuous strategy I've found for handling change.  Any code
+which creates Foos just needs to add an 'impl::', while any code which
+merely references Foo will never know that Foo suddenly became an
+interface.
+
+One could have a policy of always splitting interface/implementation
+at the outset, but often one doesn't know _a priori_ whether a class
+will eventually be used as a base implementation (no splitting) or as
+an interface.
+

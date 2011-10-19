@@ -1,0 +1,47 @@
+
+================================================================
+topeviewer
+================================================================
+
+File Format
+===========
+
+The file format is very simple: just give the number of vertices, the
+dimension, and the vertices.  '#'-comments are allowed and blank lines
+are ignored.
+
+-------------------------------------------------------
+<number of vertices>  <number of dimensions> <newline>
+<vertex 1> <newline>
+<vertex 2> <newline>
+...
+<vertex n> <newline>
+-------------------------------------------------------
+
+For example,
+
+-------------------------------------------------------
+#
+#  3-dimensional cube
+#
+#
+
+8 3
+
+1 1 1  
+1 1 -1
+1 -1 1
+1 -1 -1  
+-1 1 1  
+-1 1 -1
+-1 -1 1
+-1 -1 -1
+-------------------------------------------------------
+
+topeviewer can also grab vertices directly from a Surface Evolver
+datafile (http://www.susqu.edu/facstaff/b/brakke/evolver/evolver.htm).
+
+
+
+
+

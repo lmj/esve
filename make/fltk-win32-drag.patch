@@ -1,0 +1,18 @@
+diff -ru tmp/fltk-1.1.4/src/Fl_win32.cxx cur/fltk-1.1.4/src/Fl_win32.cxx
+--- tmp/fltk-1.1.4/src/Fl_win32.cxx
++++ cur/fltk-1.1.4/src/Fl_win32.cxx
+@@ -464,7 +464,13 @@
+     return Fl::handle(FL_PUSH,window);
+ 
+   case 2: // release:
+-    if (!fl_capture) ReleaseCapture();
++    if( !(state & FL_BUTTON1) &&
++        !(state & FL_BUTTON2) &&
++        !(state & FL_BUTTON3) &&
++        !fl_capture )
++    {
++        ReleaseCapture();
++    }
+     Fl::e_keysym = FL_Button + button;
+     return Fl::handle(FL_RELEASE,window);
+ 

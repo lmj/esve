@@ -1,0 +1,189 @@
+
+////////////////////////////////////////////////////////////
+// doxygen groups
+////////////////////////////////////////////////////////////
+
+//
+// @defgroup engine_group engine
+//
+
+//
+// @defgroup components_group components
+//
+
+//
+// @defgroup viewers_group viewers
+//
+
+////////////////////////////////////////////////////////////
+//
+// namespaces
+//
+////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+// message
+////////////////////////////////////////////////////////////
+
+///
+/// @namespace esve::message
+/// @brief Message-passing system.
+///
+
+////////////////////////////////////////////////////////////
+// kernel
+////////////////////////////////////////////////////////////
+
+///
+/// @namespace esve::kernel
+/// @brief Application model built from the message system.
+///
+
+////////////////////////////////////////////////////////////
+// types
+////////////////////////////////////////////////////////////
+
+///
+/// @namespace esve::types
+/// @brief Fundamental concrete types.
+///
+
+////////////////////////////////////////////////////////////
+// ui
+////////////////////////////////////////////////////////////
+
+///
+/// @namespace esve::ui::base
+/// @brief Platform-independent GUI.
+///
+
+///
+/// @namespace esve::ui::extra
+/// @brief Extra GUI objects.
+///
+
+////////////////////////////////////////////////////////////
+// engine
+////////////////////////////////////////////////////////////
+
+///
+/// @namespace esve::engine::dimn
+/// @brief N-dimensional engine (common classes for 3D and 4D).
+///
+// @ingroup engine_group
+
+///
+/// @namespace esve::engine::dim3
+/// @brief Three-dimensional engine.
+///
+// @ingroup engine_group
+
+///
+/// @namespace esve::engine::dim4
+/// @brief Four-dimensional (Moebius) engine.
+///
+// @ingroup engine_group
+
+////////////////////////////////////////////////////////////
+// components
+////////////////////////////////////////////////////////////
+
+///
+/// @namespace esve::components::dimn
+/// @brief Components built from the n-dimensional engine
+///
+// @ingroup components_group
+
+///
+/// @namespace esve::components::dim3
+/// @brief Components built from the three-dimensional engine.
+///
+// @ingroup components_group
+
+///
+/// @namespace esve::components::dim4
+/// @brief Components built from the four-dimensional engine.
+///
+// @ingroup components_group
+
+////////////////////////////////////////////////////////////
+// viewers
+////////////////////////////////////////////////////////////
+
+///
+/// @namespace esve::viewers::dim3
+/// @brief Viewers built from three-dimensional components.
+///
+// @ingroup viewers_group
+
+///
+/// @namespace esve::viewers::dim4
+/// @brief Viewers built from four-dimensional components.
+///
+// @ingroup viewers_group
+
+////////////////////////////////////////////////////////////
+// types
+////////////////////////////////////////////////////////////
+
+///
+/// @class esve::math::quat esve/math/quat.hxx
+/// @brief Quaternions.
+///
+/// See the source header.
+///
+
+///
+/// @class esve::math::pure esve/math/quat.hxx
+/// @brief Pure quaternions.
+///
+/// See the source header.
+///
+
+///
+/// @class esve::math::complex esve/math/complex.hxx
+/// @brief Complex numbers.
+///
+/// See the source header.
+///
+
+///
+/// @class esve::base::dimn::rgba esve/base/dimn/rgba.hxx
+/// @brief OpenGL-style floating-point RGBA color.
+///
+/// See the source header.
+///
+
+////////////////////////////////////////////////////////////
+// main page
+////////////////////////////////////////////////////////////
+
+///
+/// @mainpage esve
+///
+/// <center>
+/// <h2>A library for 3D and 4D visualization</h2>
+/// </center>
+///
+/// <hr>
+/// <ul>
+/// <li>
+/// <a href=../../README.structure>Structure</a>
+/// </li>
+/// <li>
+/// <a href=../../README.esve>Overview</a>
+/// </li>
+/// <li>
+/// <a href=../../README.hook>Hook pattern</a>
+/// </li>
+/// <li>
+/// <a href=../../README.c++-style>Technical C++ style</a>
+/// </li>
+/// </ul>
+/// 
+/// <hr>
+/// Author: James M. Lawrence
+/// &lt;quixoticsycophant@gmail.com>
+///
+
+

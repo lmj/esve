@@ -1,0 +1,252 @@
+
+=================================================================
+Surface_Viewer
+=================================================================
+
+Surface_Viewer is an end-user class for viewing parametric surfaces.
+Example uses are 'waves', 'monomial', and 'poles'.
+
+A parametric surface is defined by a _specification_, which is a set
+of functions along with some flags.  In most cases there will be a
+suitable base specification available which handles the requirements
+for the desired type of domain, leaving only the surface() and color()
+functions for the you to define.
+
+In the case of the 'poles' example, the base specification is
+Disc_With_Two_Holes.  The Poles class provides surface() and color()
+which complete the specification.  (Disc_With_Two_Holes provides the
+functions domain(), domain_clip(), and domain_snap(), but for the
+moment consider that an implementation detail.)
+
+End-user domain specifications are found in esve/geom/dim3/specs and
+esve/geom/dim4/specs.  Their names describe them fully: Unit_Square,
+Disc, Disc_With_One_Hole, etc.
+
+The Surface_Viewer class derives from Simple_Viewer.  The most
+important methods Surface_Viewer provides on top of Simple_Viewer are
+
+    Valuator & create_valuator( Member,
+                                Valuator_Effect,
+                                const std::string & name = "" ) ;
+
+    Valuator & create_valuator( Reader,
+                                Writer,
+                                Valuator_Effect,
+                                const std::string & name = "" ) ;
+
+These link up member variables or reader/writer functions of the
+surface specification to valuators of the user-interface.  The
+Valuator_Effect argument is one of:
+
+    CHANGES_DOMAIN       : valuator changes something in domain()
+    CHANGES_DOMAIN_CLIP  : valuator changes something in domain_clip()
+    CHANGES_SURFACE      : valuator changes something in surface()
+    CHANGES_SURFACE_CLIP : valuator changes something in surface_clip
+    CHANGES_COLOR        : valuator changes something in color()
+
+The reason for the Valuator_Effect argument is efficiency.  For
+instance if a valuator merely changes the color then there is no need
+to do a possibly expensive recomputation of the surface coordinates.
+
+Surface_Viewer also defines
+
+    create_resolution_valuator()
+
+which adds a valuator for adjusting the resolution (number of quads),
+
+    resolution(width, height)
+
+for setting the resolution in code, and
+
+    create_hide_back_toggle()
+
+which adds a toggle for culling the back side of the surface.
+
+Using the examples as a starting point, you should be able to draw
+most any simple surface.  To draw more complicated surfaces, you'll
+need to read the following explanation of the parametric surface
+specification.
+
+=================================================================
+Surface Specifications
+=================================================================
+
+A surface specification consists of:
+
+    - a category selector
+    - a topology selector
+    - a postcompute selector
+    - three to seven required functions, depending on the selectors given
+
+A _selector_ is a compile-time flag (an empty struct) which selects
+some property.  The types of selectors are
+
+    - category
+        - regular
+        - clipped
+        - sliced
+    - topology
+        - plane
+        - cylinder_wrap_width
+        - cylinder_wrap_height
+        - torus
+        - moebius_band_wrap_width
+        - moebius_band_wrap_height
+        - klein_bottle_wrap_width
+        - klein_bottle_wrap_height
+        - projective_plane
+    - postcompute
+        - yes
+        - no
+
+The Category Selector
+---------------------
+A _regular_ parametric surface is a simple map of the unit square.
+The required functions are
+
+    - domain()
+    - surface()
+    - color()
+
+These functions are applied in the order shown.  domain() maps the
+unit square to the desired domain shape, such as a disk or a
+rectangle; surface() maps the domain to the surface coordinates;
+color() gives the color of each vertex.
+
+A _clipped_ parametric surface adds two functions, bringing the
+required functions to
+
+    - domain()
+    - domain_clip()
+    - surface()
+    - surface_clip()
+    - color()
+
+Again the functions are applied in the order shown.  Whenever
+domain_clip() or surface_clip() return true, that vertex is removed
+from the surface.
+
+Two clip functions are required, instead of just one, because there
+can be a significant advantage in clipping vertices with domain_clip()
+since the surface computation for that vertex is avoided.
+
+A _sliced_ parametric surface adds another function,
+
+    - domain()
+    - domain_clip()
+    - domain_snap()
+    - surface()
+    - surface_clip()
+    - color()
+
+Given a point on the domain, domain_snap() gives the closest point on
+the domain boundary.  This is used to build a smooth boundary for the
+surface, in contrast to the jagged look of a clipped surface.
+
+The specification functions should not be declared virtual.
+
+The Topology Selector
+---------------------
+The meaning of each topology is straightforward from the name.  For
+example cylinder_wrap_height joins the top edge of the domain to the
+bottom edge.
+
+The Postcompute Selector
+------------------------
+If the postcompute selector is 'yes' then an additional function is
+required:
+
+    - postcompute()
+
+postcompute() is called after all the other functions mentioned above.
+It is a last-chance run through the vertices before they are sent to
+the graphics card.
+
+One use of postcompute() is to color according to surface normals:
+    
+    void postcompute( Vertex & vertex ) const
+    {
+        vertex.color =
+            rgba::from_hsva(
+                std::min(
+                    std::abs(vertex.normal.z()/abs(vertex.normal)),
+                    real(0.7)),
+                0.75,
+                0.75,
+                1.0) ;
+    }
+
+Basic Types
+-----------
+The Parametric_Surface_Spec class provides basic types: real, complex,
+quat, Vertex, etc.
+
+Example
+-------
+A raw specification looks something like this (from polynomialviewer):
+
+struct Plane_Spec : public esve::geom::dim3::Parametric_Surface_Spec
+{
+    typedef
+    esve::geom::dimn::selectors::category::regular
+    category_selector ;
+
+    typedef
+    esve::geom::dimn::selectors::topology::plane
+    topology_selector ;
+
+    typedef
+    esve::geom::dimn::selectors::postcompute::no
+    postcompute_selector ;
+
+    real size ;
+    real fade ;
+
+    Plane_Spec()
+        : size(5.0),
+          fade(0.2) { }
+
+    complex domain( const complex & unit_square ) const
+    {
+        return real(2)*unit_square - complex(1, 1) ;
+    }
+
+    pure surface( const complex & unit_square,
+                  const complex & domain ) const
+    {
+        return pure(size*domain.real(), size*domain.imag(), 0) ;
+    }
+
+    rgba color( const complex & unit_square,
+                const complex & domain,
+                const pure & surface ) const
+    {
+        return rgba(1, 1, 1, fade) ;
+    }
+} ;
+
+Specifications for four-dimensional surfaces are exactly the same
+except the 'dim3' namespace is replaced with 'dim4', and the 'pure'
+type (i.e. pure quaternion) is replaced with 'quat' (i.e. quaternion).
+
+Miscellany
+----------
+The postcompute() example given above illuminates a key difference
+between 3D and 4D surfaces.
+
+The normals for a 3D surface need only be calculated once; thereafter
+they may be transformed together with the surface points.
+
+On the other hand, to speak of 'normals' of a 4D surface makes sense
+only in relation to a particular projection to 3D.  The normals must
+be recalculated every time the surface is transformed.
+
+Therefore, although the above postcompute() example works for both 3D
+and 4D surfaces, the effect is entirely different.  Try it!  Remember
+to set the postcompute_selector in the specification:
+
+    typedef
+    esve::geom::dimn::selectors::postcompute::yes
+    postcompute_selector ;
+
+

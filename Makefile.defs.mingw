@@ -1,0 +1,49 @@
+
+CXX      = d:/usr/local/mingw/bin/g++
+
+ARCHIVE  = d:/usr/local/mingw/bin/ar crs
+
+INC_DIRS = -I d:/usr/local/fltk/include
+
+LIB_DIRS = -L d:/usr/local/fltk/lib
+
+OPTIMIZE = -O3 -ffast-math -fomit-frame-pointer -DNDEBUG -s
+
+WARNINGS =
+
+CFLAGS = $(OPTIMIZE) $(WARNINGS) -DWIN32 -DWIN32_LEAN_AND_MEAN 
+
+LDFLAGS = $(CFLAGS) -mwindows 
+
+LD_EXEC = $(CXX)
+
+RANLIB = :
+
+MAKE_DEPEND = $(CXX) -MM
+
+CXX_SUFFIX = .cxx
+
+OBJ_SUFFIX = .o
+
+OBJ_SWITCH = -c
+
+OUTPUT_SWITCH = -o
+
+RM = rm -f
+
+LIB_PREFIX = lib
+
+LIB_SUFFIX = .a
+
+EXEC_SUFFIX = .exe
+
+LIBS = \
+	-lfltk_gl \
+	-lfltk \
+	-lglu32 \
+	-lopengl32 \
+	-lole32 \
+	-lwsock32 \
+	-luuid \
+	-lwinmm \
+

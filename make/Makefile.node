@@ -1,0 +1,23 @@
+
+all : 
+	@for dir in $(DIRS); do \
+	(cd $$dir && $(MAKE) all) \
+	done;
+
+dep :
+	@for dir in $(DIRS); do \
+	(cd $$dir && $(MAKE) dep) \
+	done;
+
+clean :
+	@for dir in $(DIRS); do \
+	(cd $$dir && $(MAKE) clean) \
+	done;
+
+depclean :
+	@for dir in $(DIRS); do \
+	(cd $$dir && $(MAKE) depclean) \
+	done;
+
+.PHONY : all dep clean depclean
+

@@ -1,0 +1,73 @@
+
+Welcome to four-dimensional polytopes, the analogue of three-
+dimensional polyhedra.
+
+Dragging the left mouse button in the camera window rotates the
+polytope in 3D. Likewise the right mouse button rotates in 4D.
+
+Click on a number field then drag left/right to modify it, or use the
+keyboard.
+
+The spacebar cycles through the current stored configurations, if any
+are present.
+
+* file: Load a new polytope.  The formats accepted are described in
+README.topeviewer.
+
+* camera pos: Change the camera's z-axis position.  Set this to zero
+for the effect of being "on" the 3-sphere.
+
+* camera fov: Change the camera's field of view, in degrees.
+
+* slide color: Shift the hue of all colors.
+
+* ball radius: Change the size of the balls enclosing the points.
+
+* tube radius: Change the thickness of the tubes representing edges.
+
+* clip balls: Show balls which fall within this range of distances
+from the origin.
+
+* clip edges: Show edges whose vertices fall within this range of
+distances from the origin.
+
+* edge lengths: Show edges whose lengths fall within this range.
+
+* inversion: Move between stereographic and orthographic projections.
+The point at infinity is the reciprocal of this value.
+
+Each mouse button changes the selected value at a different rate; left
+button is slowest and right button is fastest.
+
+You may save the current state by pressing ENTER, which adds a
+configuration line to the file.
+
+Keyboard functions:
+q --- quit the application
+e --- toggle stars
+r --- reset position
+f --- toggle full screen
+z --- toggle panel
+[, ] --- tube resolution
+a, s, d, w --- rotate stars
+
+Closing the camera window will also exit the application.
+
+Mouse sensitivity may be adjusted with the "-s" command-line option.
+Default is 0.75 (measured in milliradians per pixel).
+
+The 'c' key toggles "Hopf rotations," explained in README.4d.
+
+The stars represent real astronomical data.
+
+The user interface elements (windows, input fields) were created with
+the fltk library (http://www.fltk.org).
+
+topeviewer is copyright (c) 2006 by James M. Lawrence.
+All rights reserved.
+<quixoticsycophant@gmail.com>
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+                                                                        

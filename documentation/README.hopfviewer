@@ -1,0 +1,34 @@
+
+================================================================
+hopfviewer
+================================================================
+
+Four-dimensional visualization of the Clifford torus.
+
+"Align 4D"
+==========
+
+When this option is selected, the action of the right mouse button is
+changed.  It now leaves the torus invariant, and the frame of
+reference for the new action is the torus itself.  The (dx, dy)
+velocity of the mouse corresponds to a rotation of angle dx in one
+plane and a simultaneous rotation of angle dy in the complement plane
+(up to some scaling factor).  A torus with a winding of (a, b) is left
+fiber-wise invariant by a mouse drag of slope b/a.
+
+Fibers
+======
+
+A circle consisting of a single color is a Hopf fiber, which may be
+clearly seen with a winding of (1, 1) (use "squares" mode or manual
+mode).  Adjusting the first "subdomain" field shows how Hopf fibers
+trace out a torus.  This parameter along with the "ratio angle"
+parameter enables one to see the foliation of S^3 by Hopf fibers.
+
+The surface domain is a single rectangle which is stretched then
+rotated (in domain space) to match the winding slope.  Therefore,
+ironically, hopfviewer cannot show individual Hopf fibers except
+indirectly as explained above.  However, a winding of (n, n + 1) for
+higher values of n, say (25, 26), is effectively indistinguishable
+from Hopf fibers (that is, you probably won't notice the difference
+between a slope of 1.04 and a slope of 1).

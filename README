@@ -1,0 +1,43 @@
+
+Welcome
+-------
+esve is a platform-independent C++ library for building 3D and 4D
+visualization applications.  There are several applications here which
+demonstrate its use.
+
+Requirements
+------------
+The GUI library 'fltk' is required, http://fltk.org.  fltk-1.1.x was
+used for development and testing.
+
+Compiling esve
+--------------
+For UNIX-style machines, run "./configure" then "make".  It is likely
+that GNU make is required (often named "gmake" on non-Linux machines).
+
+For Windows/mingw, first copy Makefile.defs.mingw to Makefile.defs
+then edit Makefile.defs, giving the compiler and fltk paths.  I
+recommend the Cygwin environment together with the latest mingw
+compiler from mingw.org.
+
+A modern C++ compiler and standard library is required.  For GNU C++
+this means at least version 3.3.
+
+Where to Start
+--------------
+Documentation begins at documentation/index.html.
+
+The bundled applications are in the apps/ directory; executables are
+created inside their respective directories.
+
+If you are new to esve, I recommend running hopfviewer first.  It has
+in-application help and demonstrates some essentials of
+four-dimensional geometry.
+
+Author
+------
+James M. Lawrence
+<llmjjmll@gmail.com>
+
+See LICENSE.
+

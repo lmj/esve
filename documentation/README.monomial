@@ -1,0 +1,23 @@
+
+================================================================
+monomial
+================================================================
+
+When the 'root radius' is zero, the complex function is
+
+      f(z) = z^n.
+
+Switching to quaternion notation, let
+
+      g: C --> H,  g(z) = z + f(z) j
+
+or in polar form,
+
+    g(s e^(i t)) = s e^(i t) + s^n e^(n i t) j
+
+Notice this is a (1, n) torus knot when s = 1.  Thus when the domain
+annulus approximates the unit circle, say for s between 0.95 and 1.05
+(the two 'domain' parameters), then the pictures look much like
+hopfviewer with winding set to (1, n).
+
+

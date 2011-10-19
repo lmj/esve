@@ -1,0 +1,82 @@
+
+Welcome to the four-dimensional torus.
+
+Dragging the left mouse button in the camera window rotates the
+torus in 3D. Likewise the right mouse button rotates in 4D.
+
+Click on a number field then drag left/right to modify it, or use the
+keyboard.
+
+* strips/squares:
+
+strips: Create this number of skinny rectangles across the domain,
+preserving the rectangles by skewing.
+
+squares: Automatically adjust the skew and resolution parameters
+to make squares, up to this number.  The field will turn red when
+the value is insufficient.
+
+Strips are suited for fibrous tori and squares for solid tori.
+
+To disable the strips/squares feature and control resolution
+manually (as well as skew), set the value to zero.
+
+* subdomain: Use a rectangular subset of the domain defined by
+these two numbers.
+
+* winding: For the pair (m,n) the surface winds m times around the
+torus in one direction and n times in the other direction.  A full
+torus is formed when (m,n) are relatively prime integers.
+
+* ratio angle: Change the ratio of the radii of the generating
+circles.
+
+* inversion: Move between stereographic and orthographic
+projections.  The point at infinity is the reciprocal of this value.
+
+* scale: Scale the torus as a whole.
+
+* gap: Modify the spacing between quads.
+
+* resolution: The number of quads, width and height, of the full
+domain.  (Modifiable when strips/squares is disabled.)
+
+* skew: Lift one edge of the domain while keeping the opposite
+edge fixed.  (Modifiable when strips/squares is disabled.)
+
+* align 4D: Convert the right mouse button to yield 4D rotations
+aligned with the torus itself.
+
+* hide back: Hide quads whose gray side would be showing.
+
+Each mouse button changes the selected value at a different rate; left
+button is slowest and right button is fastest.
+
+Keyboard functions:
+q --- quit the application
+e --- toggle stars
+r --- reset position
+f --- toggle full screen
+z --- toggle panel
+a, s, d, w --- rotate stars
+
+Closing the camera window will also exit the application.
+
+Mouse sensitivity may be adjusted with the "-s" command-line option.
+Default is 0.75 (measured in milliradians per pixel).
+
+The 'c' key toggles "Hopf rotations," explained in README.4d.
+
+The stars represent real astronomical data.
+
+The user interface elements (windows, input fields) were created with
+the fltk library (http://www.fltk.org).
+
+hopfviewer is copyright (c) 2006 by James M. Lawrence.
+All rights reserved.
+<quixoticsycophant@gmail.com>
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+                                                                        

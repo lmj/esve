@@ -1,0 +1,56 @@
+
+Real curves of polynomials.
+
+Given a complex polynomial with real coefficients,
+
+    f: C --> C
+
+there is a set of curves on the domain which yield values of f(z)
+which are strictly real,
+
+    f: {curves in C} --> R
+
+To approximate these curves, choose a small epsilon and show only
+the portion of the surface for which
+
+    abs(imag(f(z))) < epsilon
+
+The coordinates plotted are
+
+    ( real part of z, imaginary part of z, real part of f(z) )
+
+The roots of f(z) are colored in red.
+
+Click on a number field then drag left/right to modify it, or use the
+keyboard.
+
+* order: The order of the polynomial (the highest power).
+
+* coefficient: Choose a coefficient then modify its value.
+
+* epsilon: As described above.
+
+* scale Re{f(z)}: Multiply the real part of f(z) by this value.
+
+* scale color: Change the color gradient around the roots.
+
+* resolution: The number of quads, width and height.
+
+* plane size: (Self-explanatory.)
+
+* plane fade: (Self-explanatory.)
+
+* axes: Show/hide the domain axes.
+
+Each mouse button changes the selected value at a different rate; left
+button is slowest and right button is fastest.
+
+The user interface elements (windows, input fields) were created with
+the fltk library (http://www.fltk.org).
+
+polynomialviewer is copyright (c) 2006 by James M. Lawrence.
+All rights reserved.
+<quixoticsycophant@gmail.com>
+                                                                        
+                                                                        
+

@@ -1,0 +1,134 @@
+Index: esve/viewers/dim4/Simple_Viewer.hxx
+===================================================================
+--- esve/viewers/dim4/Simple_Viewer.hxx	(revision 6413)
++++ esve/viewers/dim4/Simple_Viewer.hxx	(working copy)
+@@ -13,7 +13,7 @@
+ 
+ ///
+ /// @class Simple_Viewer esve/viewers/dim4/Simple_Viewer.hxx
+-/// @brief A simplified front-end to the four-dimensional engine.
++/// @brief A simplified front-end to the three-dimensional engine.
+ ///
+ 
+ class Simple_Viewer
+@@ -25,7 +25,7 @@
+     /// Constructor.  Give the arguments from main().
+     Simple_Viewer( int argc,
+                    char** argv,
+-                   const std::string & label = "simple4d" ) ;
++                   const std::string & label = "simple3d" ) ;
+ 
+     int takeover() ;
+ 
+@@ -43,9 +43,7 @@
+     // Minimal_Viewer
+     ///////////////////////////////////////////////////////
+ 
+-    void add_geom( engine::dim3::Geom & ) ;
+     void add_geom( engine::dim4::Geom & ) ;
+-    void remove_geom( engine::dim3::Geom & ) ;
+     void remove_geom( engine::dim4::Geom & ) ;
+ 
+     ///////////////////////////////////////////////////////
+@@ -93,9 +91,6 @@
+     Valuator &
+     create_scaling_valuator( const std::string & label = "scale" ) ;
+ 
+-    Valuator &
+-    create_inversion_valuator( const std::string & label = "inversion" ) ;
+-
+     ///////////////////////////////////////////////////////
+     // handlers
+     ///////////////////////////////////////////////////////
+Index: esve/viewers/dim4/Simple_Viewer.cxx
+===================================================================
+--- esve/viewers/dim4/Simple_Viewer.cxx	(revision 6409)
++++ esve/viewers/dim4/Simple_Viewer.cxx	(working copy)
+@@ -1,12 +1,12 @@
+ 
+ #include <esve/viewers/dim4/Simple_Viewer.hxx>
+-#include <esve/viewers/dim3/Camera.hxx>
++#include <esve/viewers/dim4/Camera.hxx>
+ #include <esve/viewers/dim4/impl/Auto_Widgets.hxx>
+ #include <esve/viewers/dim4/Canned_Viewer.hxx>
+-#include <esve/viewers/dim3/Default_Initializer.hxx>
++#include <esve/viewers/dim4/Default_Initializer.hxx>
+ #include <esve/components/dimn/impl/Simple_UI.hxx>
+ #include <esve/components/dimn/Command_Line.hxx>
+-#include <esve/engine/dim3/Camera.hxx>
++#include <esve/engine/dim4/Camera.hxx>
+ #include <esve/ui/extra/disclaimer.hxx>
+ #include <esve/kernel/Simple_Kernel.hxx>
+ #include <esve/message/Draw_Sender.hxx>
+@@ -17,9 +17,6 @@
+ 
+ const std::string HELP_TEXT =
+ "\
+-Dragging the left mouse button in the camera window rotates the\n\
+-object in 3D. Likewise the right mouse button rotates in 4D.\n\
+-\n\
+ Click on a number field then drag left/right to modify it, or use the\n\
+ keyboard.\n\
+ \n\
+@@ -39,8 +36,6 @@
+ Mouse sensitivity may be adjusted with the \"-s\" command-line option.\n\
+ Default is 0.75 (measured in milliradians per pixel).\n\
+ \n\
+-The 'c' key toggles \"Hopf rotations,\" explained in README.4d.\n\
+-\n\
+ The stars represent real astronomical data.\n\
+ " ;
+ 
+@@ -55,7 +50,7 @@
+     typedef Canned_Viewer super ;
+ 
+     struct Own_Initializer
+-        : public dim3::Default_Initializer
++        : public Default_Initializer
+     {
+         Simple_Viewer::Private & m ;
+ 
+@@ -100,7 +95,7 @@
+     : super(argc, argv),
+       outside(outside_),
+       ui(super::create_camera(label).display()),
+-      auto_widgets(outside_, *this, *this),
++      auto_widgets(outside_, *this),
+       initializer(*this),
+       help_text(HELP_TEXT + ui::extra::disclaimer::disclaimer())
+ {
+@@ -158,13 +153,6 @@
+     return m->auto_widgets.create_scaling_valuator(label) ;
+ }
+ 
+-Simple_Viewer::Valuator &
+-Simple_Viewer::
+-create_inversion_valuator( const std::string & label )
+-{
+-    return m->auto_widgets.create_inversion_valuator(label) ;
+-}
+-
+ void
+ Simple_Viewer::
+ create_label( const std::string & label )
+@@ -248,20 +236,6 @@
+ 
+ void
+ Simple_Viewer::
+-add_geom( engine::dim3::Geom & a )
+-{
+-    m->add_geom(a) ;
+-}
+-
+-void
+-Simple_Viewer::
+-remove_geom( engine::dim3::Geom & a )
+-{
+-    m->remove_geom(a) ;
+-}
+-
+-void
+-Simple_Viewer::
+ add_geom( engine::dim4::Geom & a )
+ {
+     m->add_geom(a) ;

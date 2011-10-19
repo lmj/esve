@@ -1,0 +1,29 @@
+
+================================================================
+Tutorials
+================================================================
+
+simple3d and simple4d are tutorials for Simple_Viewer, a simplified
+front-end to esve.  They also show how to to define 3D and 4D objects
+for the esve engine.
+
+If you find Simple_Viewer too restrictive then you can use Simple_UI
+without Simple_Viewer in order to build a more flexible application
+(see topeviewer).  If Simple_UI is still too restrictive then you can
+always design your own GUI (see polynomialviewer).
+
+The definition of a geometric object depends only upon rudimentary
+types such as quaternions and complex numbers; in particular it does
+not (and should not) require any esve headers other than the low-level
+subpackages base/, geom/ surface/, and types/.
+
+In this manner geometric objects are kept independent of the engine.
+This, I hope, will make defining new objects easier and allow
+higher-level objects to sit atop the current system without being
+constrained in possibly inefficient ways.
+
+For 4D objects the engine hook consists of a handful of methods you
+define.  These are called by a template mechanism which does the
+actual hooking.  On the other hand, defining 3D objects is much
+easier; the only requirement is a draw() method.
+

@@ -1,0 +1,20 @@
+
+OBJS = $(CXX_SRC:$(CXX_SUFFIX)=$(OBJ_SUFFIX))
+
+all :
+
+dep :
+	$(MAKE_DEPEND) $(INC_DIRS) $(EXTRA_INC_DIRS) $(CFLAGS) $(EXTRA_CFLAGS) $(CXX_SRC) | perl -p -e 's{^(\w+)\.o\s*:\s*(.*)/\1\.cxx}{$$2/$$1.o : $$2/$$1.cxx}' > Makefile.dep
+
+%$(OBJ_SUFFIX) : %$(CXX_SUFFIX)
+	$(CXX) $(INC_DIRS) $(EXTRA_INC_DIRS) $(CFLAGS) $(EXTRA_CFLAGS) $(OBJ_SWITCH) $(OUTPUT_SWITCH) $@ $<
+
+clean : 
+	$(RM) $(REAL_TARGET) $(OBJS)
+
+depclean : 
+	$(RM) Makefile.dep
+
+
+.PHONY : all dep all clean depclean
+

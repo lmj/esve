@@ -1,0 +1,644 @@
+Index: esve/message/Handle_Receiver.cxx
+===================================================================
+--- esve/message/Handle_Receiver.cxx	(revision 6416)
++++ esve/message/Handle_Receiver.cxx	(working copy)
+@@ -13,11 +13,11 @@
+ {
+ }
+ 
+-bool
++void
+ Handle_Receiver::
+-call_handle( Handle_Receiver & a, const Handle_Args & args )
++call_handle( Handle_Receiver & a )
+ {
+-    return a.handle(args) ;
++    a.handle() ;
+ }
+ 
+ }} // namespace esve::message
+Index: esve/message/Draw_Sender_Delegator.hxx
+===================================================================
+--- esve/message/Draw_Sender_Delegator.hxx	(revision 6418)
++++ esve/message/Draw_Sender_Delegator.hxx	(working copy)
+@@ -28,7 +28,6 @@
+     Draw_Sender_Delegator( Draw_Sender & ) ;
+ 
+     void send_draw() = 0 ;
+-    void send_draw_initialize() = 0 ;
+ 
+ private:
+     Draw_Sender_Delegator( const Draw_Sender_Delegator & ) ;
+Index: esve/message/Handle_Sender.hxx
+===================================================================
+--- esve/message/Handle_Sender.hxx	(revision 6418)
++++ esve/message/Handle_Sender.hxx	(working copy)
+@@ -4,7 +4,6 @@
+ 
+ namespace esve { namespace message {
+ 
+-class Handle_Args ;
+ class Handle_Receiver ;
+ 
+ ///
+@@ -38,11 +37,10 @@
+     Handle_Sender() ;
+ 
+     /// Send the handle() message to all children.
+-    virtual bool send_handle( const Handle_Args & ) = 0 ;
++    virtual void send_handle() = 0 ;
+ 
+     // Allow subclasses to call send_handle() on aggregates.
+-    static bool call_send_handle( Handle_Sender &,
+-                                  const Handle_Args &  ) ;
++    static void call_send_handle( Handle_Sender & ) ;
+ 
+ private:
+     Handle_Sender( const Handle_Sender & ) ;
+Index: esve/message/Update_Receiver.cxx
+===================================================================
+--- esve/message/Update_Receiver.cxx	(revision 6416)
++++ esve/message/Update_Receiver.cxx	(working copy)
+@@ -20,11 +20,4 @@
+     a.update() ;
+ }
+ 
+-void
+-Update_Receiver::
+-call_update( Update_Receiver & a, double dt )
+-{
+-    a.update(dt) ;
+-}
+-
+ }} // namespace esve::message
+Index: esve/message/Update_Sender.cxx
+===================================================================
+--- esve/message/Update_Sender.cxx	(revision 6416)
++++ esve/message/Update_Sender.cxx	(working copy)
+@@ -20,11 +20,4 @@
+     a.send_update() ;
+ }
+ 
+-void
+-Update_Sender::
+-call_send_update( Update_Sender & a, double dt )
+-{
+-    a.send_update(dt) ;
+-}
+-
+ }} // namespace esve::message
+Index: esve/message/Draw_Receiver.hxx
+===================================================================
+--- esve/message/Draw_Receiver.hxx	(revision 6418)
++++ esve/message/Draw_Receiver.hxx	(working copy)
+@@ -36,12 +36,6 @@
+     // Allow subclasses to call draw().
+     static void call_draw( Draw_Receiver & ) ;
+ 
+-    /// Receive the draw_initialize() message.
+-    virtual void draw_initialize() ;
+-
+-    // Allow subclasses to call draw_initialize().
+-    static void call_draw_initialize( Draw_Receiver & ) ;
+-
+ private:
+     Draw_Receiver( const Draw_Receiver & ) ;
+     Draw_Receiver & operator=( const Draw_Receiver & ) ;
+Index: esve/message/Handle_Sender_Delegator.hxx
+===================================================================
+--- esve/message/Handle_Sender_Delegator.hxx	(revision 6418)
++++ esve/message/Handle_Sender_Delegator.hxx	(working copy)
+@@ -27,7 +27,7 @@
+ protected:
+     Handle_Sender_Delegator( Handle_Sender & ) ;
+ 
+-    bool send_handle( const Handle_Args & ) = 0 ;
++    void send_handle() = 0 ;
+ 
+ private:
+     Handle_Sender_Delegator( const Handle_Sender_Delegator & ) ;
+Index: esve/message/Draw_Sender.cxx
+===================================================================
+--- esve/message/Draw_Sender.cxx	(revision 6416)
++++ esve/message/Draw_Sender.cxx	(working copy)
+@@ -20,11 +20,4 @@
+     a.send_draw() ;
+ }
+ 
+-void
+-Draw_Sender::
+-call_send_draw_initialize( Draw_Sender & a )
+-{
+-    a.send_draw_initialize() ;
+-}
+-
+ }} // namespace esve::message
+Index: esve/message/Update_Sender_Delegator.hxx
+===================================================================
+--- esve/message/Update_Sender_Delegator.hxx	(revision 6418)
++++ esve/message/Update_Sender_Delegator.hxx	(working copy)
+@@ -28,7 +28,6 @@
+     Update_Sender_Delegator( Update_Sender & ) ;
+ 
+     void send_update() = 0 ;
+-    void send_update( double dt ) = 0 ;
+ 
+ private:
+     Update_Sender_Delegator( const Update_Sender_Delegator & ) ;
+Index: esve/message/Draw_Sender_Delegator.cxx
+===================================================================
+--- esve/message/Draw_Sender_Delegator.cxx	(revision 6416)
++++ esve/message/Draw_Sender_Delegator.cxx	(working copy)
+@@ -42,11 +42,4 @@
+     call_send_draw(m) ;
+ }
+ 
+-void
+-Draw_Sender_Delegator::
+-send_draw_initialize()
+-{
+-    call_send_draw_initialize(m) ;
+-}
+-
+ }} // namespace esve::message
+Index: esve/message/Handle_Receiver.hxx
+===================================================================
+--- esve/message/Handle_Receiver.hxx	(revision 6418)
++++ esve/message/Handle_Receiver.hxx	(working copy)
+@@ -6,8 +6,6 @@
+ 
+ namespace impl { class Handle_Receiver ; }
+ 
+-class Handle_Args ;
+-
+ ///
+ /// @class Handle_Receiver esve/message/Handle_Receiver.hxx
+ /// @brief handle() message receiver.
+@@ -33,11 +31,10 @@
+     Handle_Receiver() ;
+ 
+     /// Receive the handle() message.
+-    virtual bool handle( const Handle_Args & ) = 0 ;
++    virtual void handle() = 0 ;
+ 
+     // Allow subclasses to call handle().
+-    static bool call_handle( Handle_Receiver &,
+-                             const Handle_Args & ) ;
++    static void call_handle( Handle_Receiver & ) ;
+ 
+ private:
+     Handle_Receiver( const Handle_Receiver & ) ;
+Index: esve/message/Handle_Sender.cxx
+===================================================================
+--- esve/message/Handle_Sender.cxx	(revision 6416)
++++ esve/message/Handle_Sender.cxx	(working copy)
+@@ -13,11 +13,11 @@
+ {
+ }
+ 
+-bool
++void
+ Handle_Sender::
+-call_send_handle( Handle_Sender & a, const Handle_Args & args )
++call_send_handle( Handle_Sender & a )
+ {
+-    return a.send_handle(args) ;
++    a.send_handle() ;
+ }
+ 
+ }} // namespace esve::message
+Index: esve/message/impl/Update_Node.cxx
+===================================================================
+--- esve/message/impl/Update_Node.cxx	(revision 6416)
++++ esve/message/impl/Update_Node.cxx	(working copy)
+@@ -27,15 +27,4 @@
+     }
+ }
+ 
+-void
+-Update_Node::
+-update( double dt )
+-{
+-    if( active() )
+-    {
+-        // hook!
+-        send_update(dt) ;
+-    }
+-}
+-
+ }}} // namespace esve::message::impl
+Index: esve/message/impl/Handle_Sender.cxx
+===================================================================
+--- esve/message/impl/Handle_Sender.cxx	(revision 6416)
++++ esve/message/impl/Handle_Sender.cxx	(working copy)
+@@ -1,7 +1,6 @@
+ 
+ #include <esve/message/impl/Handle_Sender.hxx>
+ #include <esve/message/impl/Handle_Receiver.hxx>
+-#include <esve/message/Handle_Args.hxx>
+ #include <esve/message/diagnostic.hxx>
+ #include <esve/util/MP_Tree.hxx>
+ #include <cassert>
+@@ -21,10 +20,9 @@
+         : super(&outside_),
+           outside(outside_) { }
+ 
+-    static bool call_handle( message::Handle_Receiver & a,
+-                             const Handle_Args & args )
++    static void call_handle( message::Handle_Receiver & a )
+     {
+-        return Handle_Receiver::call_handle(a, args) ;
++        Handle_Receiver::call_handle(a) ;
+     }
+ } ;
+ 
+@@ -38,10 +36,9 @@
+     Private( Handle_Sender & a )
+         : super(&a) { }
+ 
+-    static bool call_send_handle( message::Handle_Sender & a,
+-                                  const Handle_Args & args )
++    static void call_send_handle( message::Handle_Sender & a )
+     {
+-        return Handle_Sender::call_send_handle(a, args) ;
++        Handle_Sender::call_send_handle(a) ;
+     }
+ } ;
+ 
+@@ -82,44 +79,21 @@
+ 
+ ///////////////////////////////////////////////////////////
+ 
+-bool
++void
+ Handle_Sender::
+-send_handle( const Handle_Args & args )
++send_handle()
+ {
+-    bool handled = false ;
+-
+-    for( Private::children_iterator i =
+-             m->children_begin() ;
++    for( Private::children_iterator i = m->children_begin() ;
+          i != m->children_end() ;
+          ++i )
+     {
+ #if defined(ESVE_DIAGNOSTIC)
+-
+         diagnostic::header("handle", *this, *i) ;
+-
+-#if defined(ESVE_DEMANGLE)
+-        int status = 0 ;
+-        diagnostic::pair("args",
+-                         abi::__cxa_demangle(typeid(args).name(),
+-                                             0,
+-                                             0,
+-                                             &status)) ;
+-#else
+-        diagnostic::pair("args",
+-                         typeid(args).name()) ;
+-
+-#endif // defined(ESVE_DEMANGLE)
+-
+-        args.diagnostic() ;
+-
+-#endif // defined(ESVE_DIAGNOSTIC)
+-
+-        handled |= Handle_Receiver::Private::call_handle(*i, args) ;
++#endif
++        Handle_Receiver::Private::call_handle(*i) ;
+     }
+-
+-    return handled ;
+ }
+-  
++
+ void
+ Handle_Sender::
+ add( message::Handle_Receiver & a )
+Index: esve/message/impl/Handle_Sender.hxx
+===================================================================
+--- esve/message/impl/Handle_Sender.hxx	(revision 6416)
++++ esve/message/impl/Handle_Sender.hxx	(working copy)
+@@ -25,7 +25,7 @@
+ protected:
+     Handle_Sender() ;
+ 
+-    bool send_handle( const Handle_Args & ) ;
++    void send_handle() ;
+ 
+ private:
+     Handle_Sender( const Handle_Sender & ) ;
+Index: esve/message/impl/Draw_Node.cxx
+===================================================================
+--- esve/message/impl/Draw_Node.cxx	(revision 6416)
++++ esve/message/impl/Draw_Node.cxx	(working copy)
+@@ -27,15 +27,4 @@
+     }
+ }
+ 
+-void
+-Draw_Node::
+-draw_initialize()
+-{
+-    if( active() )
+-    {
+-        // hook!
+-        send_draw_initialize() ;
+-    }
+-}
+-
+ }}} // namespace esve::message::impl
+Index: esve/message/impl/Draw_Node.hxx
+===================================================================
+--- esve/message/impl/Draw_Node.hxx	(revision 6416)
++++ esve/message/impl/Draw_Node.hxx	(working copy)
+@@ -27,7 +27,6 @@
+ 
+ protected:
+     void draw() ;
+-    void draw_initialize() ;
+ 
+ private:
+     Draw_Node( const Draw_Node & ) ;
+Index: esve/message/impl/Update_Sender.cxx
+===================================================================
+--- esve/message/impl/Update_Sender.cxx	(revision 6416)
++++ esve/message/impl/Update_Sender.cxx	(working copy)
+@@ -24,12 +24,6 @@
+     {
+         Update_Receiver::call_update(a) ;
+     }
+-
+-    static void call_update( message::Update_Receiver & a,
+-                             double dt )
+-    {
+-        Update_Receiver::call_update(a, dt) ;
+-    }
+ } ;
+ 
+ struct Update_Sender::Private
+@@ -46,12 +40,6 @@
+     {
+         Update_Sender::call_send_update(a) ;
+     }
+-
+-    static void call_send_update( message::Update_Sender & a,
+-                                  double dt )
+-    {
+-        Update_Sender::call_send_update(a) ;
+-    }
+ } ;
+ 
+ ///////////////////////////////////////////////////////////
+@@ -108,22 +96,6 @@
+ 
+ void
+ Update_Sender::
+-send_update( double dt )
+-{
+-    for( Private::children_iterator i = m->children_begin() ;
+-         i != m->children_end() ;
+-         ++i )
+-    {
+-#if defined(ESVE_DIAGNOSTIC)
+-        diagnostic::header("update", *this, *i) ;
+-        esve_report(dt) ;
+-#endif
+-        Update_Receiver::Private::call_update(*i, dt) ;
+-    }
+-}
+-
+-void
+-Update_Sender::
+ add( message::Update_Receiver & a )
+ {
+     m->add_child(a.update_receiver().m.get()) ;
+Index: esve/message/impl/Update_Sender.hxx
+===================================================================
+--- esve/message/impl/Update_Sender.hxx	(revision 6416)
++++ esve/message/impl/Update_Sender.hxx	(working copy)
+@@ -26,7 +26,6 @@
+     Update_Sender() ;
+ 
+     void send_update() ;
+-    void send_update( double dt ) ;
+ 
+ private:
+     Update_Sender( const Update_Sender & ) ;
+Index: esve/message/impl/Draw_Sender.cxx
+===================================================================
+--- esve/message/impl/Draw_Sender.cxx	(revision 6416)
++++ esve/message/impl/Draw_Sender.cxx	(working copy)
+@@ -24,11 +24,6 @@
+     {
+         Draw_Receiver::call_draw(a) ;
+     }
+-
+-    static void call_draw_initialize( message::Draw_Receiver & a )
+-    {
+-        Draw_Receiver::call_draw_initialize(a) ;
+-    }
+ } ;
+ 
+ struct Draw_Sender::Private
+@@ -101,21 +96,6 @@
+ 
+ void
+ Draw_Sender::
+-send_draw_initialize()
+-{
+-    for( Private::children_iterator i = m->children_begin() ;
+-         i != m->children_end() ;
+-         ++i )
+-    {
+-#if defined(ESVE_DIAGNOSTIC)
+-        diagnostic::header("draw_initialize", *this, *i) ;
+-#endif
+-        Draw_Receiver::Private::call_draw_initialize(*i) ;
+-    }
+-}
+-
+-void
+-Draw_Sender::
+ add( message::Draw_Receiver & a )
+ {
+     m->add_child(a.draw_receiver().m.get()) ;
+Index: esve/message/impl/Handle_Node.cxx
+===================================================================
+--- esve/message/impl/Handle_Node.cxx	(revision 6416)
++++ esve/message/impl/Handle_Node.cxx	(working copy)
+@@ -16,19 +16,15 @@
+ {
+ }
+ 
+-bool
++void
+ Handle_Node::
+-handle( const Handle_Args & args )
++handle()
+ {
+-    bool handled = false ;
+-    
+     if( active() )
+     {
+         // hook!
+-        handled = send_handle(args) ;
++        send_handle() ;
+     }
+-
+-    return handled ;
+ }
+ 
+ }}} // namespace esve::message::impl
+Index: esve/message/impl/Draw_Sender.hxx
+===================================================================
+--- esve/message/impl/Draw_Sender.hxx	(revision 6416)
++++ esve/message/impl/Draw_Sender.hxx	(working copy)
+@@ -26,7 +26,6 @@
+     Draw_Sender() ;
+ 
+     void send_draw() ;
+-    void send_draw_initialize() ;
+ 
+ private:
+     Draw_Sender( const Draw_Sender & ) ;
+Index: esve/message/impl/Handle_Node.hxx
+===================================================================
+--- esve/message/impl/Handle_Node.hxx	(revision 6416)
++++ esve/message/impl/Handle_Node.hxx	(working copy)
+@@ -26,7 +26,7 @@
+     ~Handle_Node() ;
+ 
+ protected:
+-    bool handle( const Handle_Args & ) ;
++    void handle() ;
+ 
+ private:
+     Handle_Node( const Handle_Node & ) ;
+Index: esve/message/Draw_Receiver.cxx
+===================================================================
+--- esve/message/Draw_Receiver.cxx	(revision 6416)
++++ esve/message/Draw_Receiver.cxx	(working copy)
+@@ -15,22 +15,9 @@
+ 
+ void
+ Draw_Receiver::
+-draw_initialize()
+-{
+-}
+-
+-void
+-Draw_Receiver::
+ call_draw( Draw_Receiver & a )
+ {
+     a.draw() ;
+ }
+ 
+-void
+-Draw_Receiver::
+-call_draw_initialize( Draw_Receiver & a )
+-{
+-    a.draw_initialize() ;
+-}
+-
+ }} // namespace esve::message
+Index: esve/message/Handle_Sender_Delegator.cxx
+===================================================================
+--- esve/message/Handle_Sender_Delegator.cxx	(revision 6416)
++++ esve/message/Handle_Sender_Delegator.cxx	(working copy)
+@@ -35,11 +35,11 @@
+     m.remove_all() ;
+ }
+ 
+-bool
++void
+ Handle_Sender_Delegator::
+-send_handle( const Handle_Args & args )
++send_handle()
+ {
+-    return call_send_handle(m, args) ;
++    call_send_handle(m) ;
+ }
+ 
+ }} // namespace esve::message
+Index: esve/message/Update_Sender.hxx
+===================================================================
+--- esve/message/Update_Sender.hxx	(revision 6418)
++++ esve/message/Update_Sender.hxx	(working copy)
+@@ -38,13 +38,9 @@
+ 
+     /// Send the update() message to all children.
+     virtual void send_update() = 0 ;
+-
+-    /// Send the update() message to all children.
+-    virtual void send_update( double dt ) = 0 ;
+ 
+     // Allow subclasses to call send_update() on aggregates.
+     static void call_send_update( Update_Sender & ) ;
+-    static void call_send_update( Update_Sender &, double dt ) ;
+ 
+ private:
+     Update_Sender( const Update_Sender & ) ;
+Index: esve/message/Draw_Sender.hxx
+===================================================================
+--- esve/message/Draw_Sender.hxx	(revision 6418)
++++ esve/message/Draw_Sender.hxx	(working copy)
+@@ -42,12 +42,6 @@
+     // Allow subclasses to call send_draw() on aggregates.
+     static void call_send_draw( Draw_Sender & ) ;
+ 
+-    /// Send the draw_initialize() message to all children.
+-    virtual void send_draw_initialize() = 0 ;
+-
+-    // Allow subclasses to call send_draw_initialize() on aggregates.
+-    static void call_send_draw_initialize( Draw_Sender & ) ;
+-
+ private:
+     Draw_Sender( const Draw_Sender & ) ;
+     Draw_Sender & operator=( const Draw_Sender & ) ;
+Index: esve/message/Update_Sender_Delegator.cxx
+===================================================================
+--- esve/message/Update_Sender_Delegator.cxx	(revision 6416)
++++ esve/message/Update_Sender_Delegator.cxx	(working copy)
+@@ -42,11 +42,4 @@
+     call_send_update(m) ;
+ }
+ 
+-void
+-Update_Sender_Delegator::
+-send_update( double dt )
+-{
+-    call_send_update(m, dt) ;
+-}
+-
+ }} // namespace esve::message
+Index: esve/message/Update_Receiver.hxx
+===================================================================
+--- esve/message/Update_Receiver.hxx
++++ esve/message/Update_Receiver.hxx
+@@ -33,12 +33,8 @@
+     /// Receive the update() message.
+     virtual void update() = 0 ;
+ 
+-    /// Receive the update() message.
+-    virtual void update( double dt ) = 0 ;
+-
+     // Allow subclasses to call update().
+     static void call_update( Update_Receiver & ) ;
+-    static void call_update( Update_Receiver &, double dt ) ;
+ 
+ private:
+     Update_Receiver( const Update_Receiver & ) ;
+Index: esve/message/impl/Update_Node.hxx
+===================================================================
+--- esve/message/impl/Update_Node.hxx
++++ esve/message/impl/Update_Node.hxx
+@@ -27,7 +27,6 @@
+ 
+ protected:
+     void update() ;
+-    void update( double dt ) ;
+ 
+ private:
+     Update_Node( const Update_Node & ) ;

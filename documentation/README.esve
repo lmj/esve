@@ -1,0 +1,321 @@
+
+***************************************************************
+                              esve
+***************************************************************
+
+esve is a platform-independent C++ library for building 3D and 4D
+visualization applications.
+
+================================================================
+Core design
+================================================================
+
+esve is based upon the following families of trees:
+
+handle() tree --- Messages from user-interface objects and other
+sources.
+
+update() tree --- Messages flagging that a state has changed, possibly
+with a time-delta.
+
+draw() tree --- Messages from displays, telling receivers to draw().
+
+compute() tree --- A layout of nontrival computations.
+
+tick() tree --- Low-level driver; you can ignore this.
+
+These are defined in esve/message.
+
+There is also a frame tree for 3D and 4D frames, defined in
+esve/engine/dim3 and esve/engine/dim4.  A frame tree implicitly acts
+as an update() tree; the update() message is relayed to all children
+and marks the frame as dirty.
+
+================================================================
+Essential Components
+================================================================
+
+By convention, a class which both sends and receives messages is
+called a "server".  A "node" (such as message::Draw_Node) is a trivial
+type of server which just relays messages from parents to children.
+
+The kernel::Async_Update_Server class deals with asynchronous handle()
+and update() messages.  It has dual membership as a node in the handle
+tree and as a node in the update tree.  If one of its child
+Handle_Receivers returns true from handle_*(), then an update()
+message is sent to its child Update_Receivers.  This allows handlers
+to be decoupled from their targets.
+
+The kernel::Sync_Update_Server class provides a time-delta to its
+children (a synchronous update(dt) message) when the application is
+awake.
+
+The ui::base::Display class is a source of handle_*() messages.
+Display is also a leaf in the update tree (Update_Receiver); the
+update() message is translated "redraw this window".
+
+The engine::dim3::Camera class is a 3D Frame as well as a Display.
+The update() message marks the Camera's frame as dirty and also marks
+the display as needing to be redrawn.
+
+================================================================
+Example
+================================================================
+
+Suppose there is a camera window showing a teapot.  The user moves the
+mouse in the camera window.
+
+           +----------+                            +----------+
+           |  Camera  |--------------------------->|  Teapot  |
+           +----------+           draw()           +----------+
+              |    *                                    *
+              |   /|\                                  /|\
+              |    |                                    |
+    handle_*()|    |                                    |
+              |    +-------------------------------+    |
+              |               update()             |    |update()
+              |                                    |    |
+             \|/                                   |    |
+              *                                    |    |
+  +---------------------+                      +--------------+
+  | Async_Update_Server |--------------------->|  root Frame  |
+  +---------------------+       update()       +--------------+
+              |    *
+              |   /|\
+              |    |
+    handle_*()|    |
+              |    |handle_*() returns true
+              |    |
+              |    |
+             \|/   | 
+              *    |
+      +--------------------+
+      |  Rotation_Handler  |
+      +--------------------+
+
+* The Camera calls handle_mouse_move() on all its child
+Handle_Receivers.
+
+* The Async_Update_Server receives handle_mouse_move() and relays it
+to all its child Handle_Receivers.
+
+* The Rotation_Handler receives the handle_mouse_move() message.  It
+interprets the mouse information and rotates the Teapot's frame.  The
+Rotation_Handler signals the change by returning true.
+
+* The Update_Server sees this return value and consequently sends
+update() to all its child Update_Receivers.
+
+* The root Frame receives the update() message and relays it to its
+child frames.
+
+* The Teapot receives update() and marks its frame as dirty.
+
+* The Camera receives an update(), marks its frame as dirty, and marks
+itself as needing to be redrawn.
+
+* On the next draw cycle (whenever that is), the Camera recomputes its
+world transform (since its frame was dirty) then sends the draw()
+messages to its Draw_Receivers.
+
+* The Teapot receives the draw() message, updates its world transform,
+and the Teapot draws.
+
+The four types of trees (handle, update, draw, frame) are best
+understood independently of one another.  The above diagram perhaps
+complicates things by showing all four trees at once.  If we trust the
+frame tree to handle the details about object positions, all we really
+have is
+
+Camera -----------> Update_Server -----------> Rotation_Handler
+        handle_*()                 handle_*()
+
+
+Update_Server -----------> root Frame
+                update()            
+
+
+Camera ---------> Teapot
+         draw()
+
+The hierarchical separation of tasks through these trees can greatly
+simplify design and programming.
+
+================================================================
+The handle() tree
+================================================================
+
+Handle_Sender, Handle_Receiver, and Handle_Node form the handle tree.
+
+handle() messages originate from user-interfaces and other
+application-level objects.
+
+esve/kernel defines the classes kernel::Emitter and kernel::Handler
+which are essentially translators of the lower-level handle() tree.
+
+Emitter and Handler are on a higher level of meaning than
+message::Handle_Sender and message::Handle_Receiver.  Emitter and
+Handler present a facade in which it seems as though whole messages
+like handle_mouse_move() are being sent and received, when actually it
+is the raw handle() message being encoded by an Emitter and then
+decoded by a Handler (for example ui::base::Mouse_Emitter and
+ui::base::Mouse_Handler).
+
+Most users will have no need to deal with message::Receiver and
+message::Sender directly.
+
+================================================================
+The update() tree
+================================================================
+
+Update_Sender, Update_Receiver, and Update_Node form the update tree.
+
+Updates should be cheap, like setting a flag.  Significant
+computations should go in a compute() tree.
+
+Updates come in two forms: asynchronous and synchronous.
+
+Asynchronous updates are responses to sporadic handle_*() messages
+such as those created by user-interfaces.
+
+Synchronous updates are loop-driven.  For these updates, the argument
+to update(dt) is the time (in seconds) since the last update.  dt may
+be zero if the total time per cycle (calculations and rendering) is
+smaller than the granularity of the system timer.
+
+Only children of a Sync_Update_Sender (which includes children of a
+Sync_Update_Server) receive synchronous updates.  The children are all
+given the same dt.
+
+As an implementation detail, Sync_Update_Sender is a Tick_Receiver.
+The tick() message is the driving force behind the synchronous
+updates.
+
+It must be emphasized that handle_*() and update() should only hold
+trivial computations such as setting a flag.  By delaying expensive
+computations until the next compute() message, one ensures that these
+computations are done as seldom as possible.
+
+================================================================
+The draw() tree
+================================================================
+
+Draw_Sender, Draw_Receiver, and Draw_Node form the draw tree.
+
+The draw() message originates from a Display (which is a Draw_Sender)
+and is passed to all children.  Children issue OpenGL commands inside
+draw().
+
+================================================================
+The compute() tree
+================================================================
+
+Compute_Sender, Compute_Receiver, and Compute_Node form the compute
+tree.
+
+The purpose of the compute tree is to provide a framework for
+performing nontrivial computations, especially in response to
+asynchronous handle_*() messages.
+
+One reason the frame tree and the draw tree are separate is because
+the order of drawing is not necessarily the order of frame visitation,
+if such an order matters.  The compute() tree is needed because the
+order of drawing is not necessarily the order of computation.
+
+For example you may want to adjust a camera's clip planes based on the
+new state of an object.  Without the compute tree, the camera would
+always be one step behind, reflecting the previous state of the object
+(assuming computations are not done inside update() or handle_*()).
+One possible solution is to override the camera's send_draw() method
+and do your own stuff before calling send_draw().  But if you do this
+often enough you'll eventually want a more systematic solution --
+which is the compute() tree.
+
+A Display sends the compute() message to all its Compute_Receivers
+just before sending the draw() message to all its Draw_Receivers.  In
+this manner one may, for example, adjust a camera's clip planes just
+before the camera calls draw() on its children.
+
+================================================================
+Directory Structure
+================================================================
+
+The path-to-name convention is per-directory, e.g.,
+
+#include <esve/engine/dim3/Camera.hxx>
+                         ---> esve::engine::dim3::Camera
+
+#include <esve/util/array.hxx>
+                         ---> esve::util::array
+
+All code is platform/GUI independent with the exception of the
+platform/ directory which holds the implementation details for a
+particular platform/GUI.
+
+================================================================
+Discussion
+================================================================
+
+esve was designed to isolate platform/GUI details.  A programmer
+should be able to write a generic core application while leaving the
+user-interface as a technical matter localized to some source file
+which anyone can implement.
+
+The philosophy is that a full "meta"-GUI library would be too
+restrictive and cumbersome, while direct use of a specific GUI library
+can lead to wasted porting time (but for me it is the aesthetic
+displeasure of unnecessarily dependent code).  esve stands at a
+halfway point between these two extremes.
+
+It goes halfway by offering some generic GUI elements (windows,
+keyboard messages, mouse messages, and a rudimentary widget panel)
+while leaving more complex interfaces to a designer familiar with the
+idiosyncrasies of a specific GUI kit.  Custom-designed GUI components
+may still, however, remain fully isolated since users may define their
+own handle_*() messages to be passed from platform-dependent code.
+
+You may have noticed that in my attempt to avoid unnecessarily
+dependent code I've actually created dependent code --- that is, code
+which depends on esve.  Here we come to my real modus operandi, which
+is to use the application framework described above.
+
+The specific messages --- handle_*(), update(), compute(), draw() ---
+each with their specific meaning, provide just the right structure for
+writing cleanly designed applications.  The framework is completely
+generic and is not tied to geometry in particular; the message/ and
+kernel/ classes are intentionally isolated for this reason.
+
+By funneling predefined messages through nodes in a hierarchy rather
+than making ad hoc observable/observer relationships (or signal/slot
+relationships), it is often possible to improve an application's
+design.  It is also easier to write reusable components when the kinds
+of messages are defined in advance.
+
+================================================================
+Replacing toolkits
+================================================================
+
+As of this writing, fltk is the only GUI toolkit which is used.  To
+use another toolkit, one just needs to re-implement ui-base.cxx
+located in platform/ --- currently about 500 lines.  There should be
+no reason to touch any other part of the engine.
+
+The basic widget panel is implemented in ui-extra.cxx (about 700
+lines).  If you wish to use Simple_Viewer and the like, that file
+needs to be re-implemented also.
+
+A few bundled applications have a custom GUI.  As of this writing,
+these are hopfviewer and polynomialviewer.  Each has a UI.cxx defined
+in platform/ which holds the toolkit implementation.  Again, there
+shouldn't be a need to touch any other files when swapping toolkits.
+
+================================================================
+The name
+================================================================
+
+The original name was 'sv' --- initials which once had a meaning.
+Since 'sv' was far too short, I settled on 'esve' (pronounced the
+same way, 'ess vee').
+
+As an added bonus, 'esve' can be typed quickly with the left hand.
+

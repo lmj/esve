@@ -1,0 +1,82 @@
+Index: poles.cxx
+===================================================================
+--- poles.cxx
++++ poles.cxx	(working copy)
+@@ -1,11 +1,11 @@
+ 
+ #include <esve/viewers/dim4/Surface_Viewer.hxx>
+-#include <esve/geom/dim4/specs/Disc_With_Two_Holes.hxx>
++#include <esve/geom/dim4/specs/Disc_With_Four_Holes.hxx>
+ #include <cmath>
+ #include <algorithm>
+ 
+ using esve::viewers::dim4::Surface_Viewer ;
+-using esve::geom::dim4::specs::Disc_With_Two_Holes ;
++using esve::geom::dim4::specs::Disc_With_Four_Holes ;
+ 
+ ////////////////////////////////////////////////////////////
+ //
+@@ -17,7 +17,7 @@
+ "\n"
+ "The complex function\n"
+ "\n"
+-"    f(z) = 1/[(z + r)(z - r)]\n"
++"    f(z) = 1/[(z + r)(z - r)(z + i r)(z - i r)]\n"
+ "\n"
+ "where the real number r is the 'separation' parameter.\n"
+ "\n"
+@@ -31,7 +31,7 @@
+ //
+ ////////////////////////////////////////////////////////////
+ 
+-class Poles : public Disc_With_Two_Holes
++class Poles : public Disc_With_Four_Holes
+ {
+ private:
+     real m_scale_fz ;
+@@ -43,10 +43,12 @@
+     //////////////////////////////////////////////////////////
+ 
+     Poles()
+-        : Disc_With_Two_Holes(
++        : Disc_With_Four_Holes(
+               Circle(complex(0, 0), 2.5),
+               Circle(complex(1, 0), 0.25),
+-              Circle(complex(-1, 0), 0.25)),
++              Circle(complex(-1, 0), 0.25),
++              Circle(complex(0, 1.0), 0.25),
++              Circle(complex(0, -1.0), 0.25)),
+           m_scale_fz(1),
+           m_scale_color(0.2) { }
+ 
+@@ -58,7 +60,11 @@
+             /
+             ((domain - hole0().center())
+              *
+-             (domain - hole1().center())) ;
++             (domain - hole1().center())
++             *
++             (domain - hole2().center())
++             *
++             (domain - hole3().center())) ;
+ 
+         return quat(m_scale_fz*fz.imag(),
+                     domain.real(),
+@@ -115,6 +121,8 @@
+     {
+         hole0(Circle(hole0().center(), a)) ;
+         hole1(Circle(hole1().center(), a)) ;
++        hole2(Circle(hole2().center(), a)) ;
++        hole3(Circle(hole3().center(), a)) ;
+     }
+ 
+     ///////////////////////////////////
+@@ -129,6 +137,8 @@
+     {
+         hole0(Circle(complex(a, 0), hole0().radius())) ;
+         hole1(Circle(complex(-a, 0), hole1().radius())) ;
++        hole2(Circle(complex(0, a), hole2().radius())) ;
++        hole3(Circle(complex(0, -a), hole3().radius())) ;
+     }
+ 
+     ///////////////////////////////////

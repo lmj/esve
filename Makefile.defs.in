@@ -1,0 +1,42 @@
+
+CXX      = @CXX@
+
+ARCHIVE  = @ARCHIVE@
+
+INC_DIRS =
+
+LIB_DIRS =
+
+OPTIMIZE = @OPTIMIZE@
+
+WARNINGS =
+
+CFLAGS = $(OPTIMIZE) $(WARNINGS) @CFLAGS@ 
+
+LDFLAGS = $(CFLAGS) @LDFLAGS@ 
+
+LD_EXEC = $(CXX)
+
+RANLIB = @RANLIB@
+
+MAKE_DEPEND = $(CXX) -MM
+
+CXX_SUFFIX = .cxx
+
+OBJ_SUFFIX = .o
+
+OBJ_SWITCH = -c
+
+OUTPUT_SWITCH = -o
+
+RM = rm -f
+
+LIB_PREFIX = lib
+
+LIB_SUFFIX = .a
+
+EXEC_SUFFIX =
+
+LIBS = @LIBS@
+
+

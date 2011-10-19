@@ -1,0 +1,26 @@
+
+================================================================
+Bugs
+================================================================
+
+There are no known bugs except the following which I believe require
+patching the GUI toolkit or the particular window manager, if a
+solution exists at all.
+
+The file make/fltk-win32-drag.patch contains a patch against
+fltk-1.1 for a minor win32 problem related to dragging the mouse
+with two or more buttons held down.
+
+There are several blemishes on the win32 side.  Motion pauses when a
+window is being moved or resized; the panel is buggy when width < 104;
+garbage sometimes appears in the camera window (drag the panel to
+clear the garbage); full screen mode isn't quite full screen.
+
+The default KDE window manager will force the panel width to be much
+larger than it should to be.  There may be a setting which fixes this.
+
+For Unix systems the behavior of full screen mode is of course
+dependent on the window manager.  Of the many popular window managers
+I tested on Linux/XFree86, only openbox and xfce behaved as I wished,
+which is to have the modal panel showing along with no buggy behavior.
+
