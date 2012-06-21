@@ -17,7 +17,7 @@ private:
     typedef Disc_With_Holes<T_complex, num_holes - 1> m_Base ;
     typedef T_complex m_complex ;
     typedef typename m_complex::value_type m_real ;
-    typedef Circle<m_complex> m_Circle ;
+    typedef geom::dimn::Circle<m_complex> m_Circle ;
     typedef slicers::Hole<m_complex> m_Hole_Slicer ;
     typedef Slicer_Union<typename m_Base::Slicer, m_Hole_Slicer> m_Slicer ;
 

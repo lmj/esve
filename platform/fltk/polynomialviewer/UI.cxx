@@ -19,6 +19,7 @@
 #include <FL/Fl_Text_Display.H>
 #include <vector>
 #include <sstream>
+#include <limits>
 
 using esve::platform::MF_Widget ;
 using esve::ui::base::Display ;

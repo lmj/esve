@@ -14,7 +14,7 @@ class Polar_Disc
 private:
     typedef T_complex m_complex ;
     typedef typename m_complex::value_type m_real ;
-    typedef Circle<m_complex> m_Circle ;
+    typedef geom::dimn::Circle<m_complex> m_Circle ;
 
     m_Circle m_disc ;
 

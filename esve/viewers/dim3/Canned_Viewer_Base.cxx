@@ -6,6 +6,7 @@
 #include <esve/kernel/Driver_Handler.hxx>
 #include <esve/kernel/Simple_Kernel.hxx>
 #include <esve/components/dimn/Command_Line.hxx>
+#include <cstdlib>
 
 namespace esve { namespace viewers { namespace dim3 {
 
@@ -28,7 +29,7 @@ struct Canned_Viewer_Base::Private
         {
             bool handled = false ;
 
-            switch( key )
+            switch( int(key) )
             {
             case 'e':
                 m.outside.stars_active(!m.outside.stars_active()) ;

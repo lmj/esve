@@ -129,26 +129,26 @@ bool
 Viewer::
 handle_key_push( Key key, const Keyboard & )
 {
-    switch( key )
+    switch( int(key) )
     {
     case Keyboard::ENTER:
         write_next_config() ;
         return false ;
 
-    case Keyboard::Key(' '):
+    case ' ':
         read_next_config() ;
         return true ;
         
     // tube stuff
 
-    case Keyboard::Key('['):
+    case '[':
         if( tope.tube_wrap_res() > 3 )
         {
             tope.tube_wrap_res(tope.tube_wrap_res() - 1) ;
         }
         return true ;
 
-    case Keyboard::Key(']'):
+    case ']':
         tope.tube_wrap_res(tope.tube_wrap_res() + 1) ;
         return true ;
 

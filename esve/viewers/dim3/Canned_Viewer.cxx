@@ -22,7 +22,7 @@ struct Canned_Viewer::Private
 
         bool handle_key_push( Key key, const Keyboard & )
         {
-            switch( key )
+            switch( int(key) )
             {
             case 'r':
                 m.rotation_frame.peek_transform().assign(m.home_transform) ;

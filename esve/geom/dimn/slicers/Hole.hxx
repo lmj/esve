@@ -12,7 +12,7 @@ class Hole
 public:
     typedef T_complex complex ;
     typedef typename complex::value_type real ;
-    typedef Circle<complex> Circle ;
+    typedef geom::dimn::Circle<complex> Circle ;
 
     explicit Hole( const Circle & circle )
         : m_circle(circle) { }

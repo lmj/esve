@@ -33,7 +33,7 @@ private:
     typedef Packed_Quad<m_Vertex_Index> m_Facet ;
 
     typedef
-    Packed_Surface
+    surface::base::Packed_Surface
     <
         Packed_Surface_Spec
         <
@@ -45,7 +45,7 @@ private:
     m_Packed_Surface ;
 
     typedef
-    Rectangular_Domain<m_Packed_Surface>
+    surface::base::Rectangular_Domain<m_Packed_Surface>
     m_Rectangular_Domain ;
 
 public:
