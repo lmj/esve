@@ -22,7 +22,6 @@
 #include <limits>
 
 using esve::platform::MF_Widget ;
-using esve::ui::base::Display ;
 using esve::platform::Representation ;
 
 const int HELP_HEIGHT = 400 ;
@@ -142,7 +141,7 @@ UI::Private::
 //////////////////////////////////////////////
 
 UI::
-UI( Display & display )
+UI( esve::ui::base::Display & display )
     : m(new Private(*this,
                     &Representation::rep(display)))
 {

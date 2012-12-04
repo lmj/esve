@@ -23,7 +23,6 @@
 
 using esve::platform::Representation ;
 using esve::platform::MF_Widget ;
-using esve::ui::base::Display ;
 using esve::math::misc::fmodp ;
 
 /////////////////////////////////////////////////////////////
@@ -219,7 +218,7 @@ Private( UI & outside_,
 //////////////////////////////////////////////////
 
 UI::
-UI( Display & display )
+UI( esve::ui::base::Display & display )
     : m(new UI::Private(*this,
                         &Representation::rep(display)))
 {
