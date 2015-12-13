@@ -21,16 +21,16 @@ AC_PROG_CXX
 
 AC_PATH_PROG(AR, ar)
 
-if test "x$AR" = "x:"; then
+if test "x$AR" = "x"; then
     AC_MSG_ERROR(could not find the library archiver)
 fi
 
 AC_PROG_RANLIB
 
-if test "x$RANLIB" != "x:"; then
-    ARCHIVE="$AR cr"
-else
+if test "x$RANLIB" = "x:"; then
     ARCHIVE="$AR crs"
+else
+    ARCHIVE="$AR cr"
 fi
 
 AC_SUBST(ARCHIVE)
