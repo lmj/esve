@@ -38,5 +38,3 @@ LIB_SUFFIX = .a
 EXEC_SUFFIX =
 
 LIBS = @LIBS@
-
-

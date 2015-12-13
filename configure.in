@@ -1,4 +1,3 @@
-
 ############################################
 # initialize autoconf
 ############################################
@@ -39,26 +38,26 @@ AC_SUBST(ARCHIVE)
 ############################################
 # find unistd.h and sysconf()
 ############################################
-        
+
 AC_CHECK_HEADER(
 	unistd.h,
 	,
 	AC_MSG_ERROR(could not find <unistd.h>))
-	
+
 AC_CHECK_FUNCS(
 	sysconf,
 	,
 	AC_MSG_ERROR(could not find sysconf()))
-	
+
 ############################################
 # find sys/times.h and times()
 ############################################
-        
+
 AC_CHECK_HEADER(
 	sys/times.h,
 	,
 	AC_MSG_ERROR(could not find <sys/times.h>))
-	
+
 AC_CHECK_FUNCS(
 	times,
 	,
@@ -178,4 +177,3 @@ AC_SUBST(OPTIMIZE)
 
 AC_CONFIG_FILES([Makefile.defs])
 AC_OUTPUT
-
