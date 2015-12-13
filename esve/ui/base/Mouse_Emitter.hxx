@@ -21,9 +21,6 @@ class Mouse_Emitter
 public:
     ~Mouse_Emitter() ;
 
-protected:
-    Mouse_Emitter() ;
-
     /// @brief You have somehow figured out that the mouse moved; send
     /// that information.
     virtual bool emit_mouse_move( const Mouse::Position & position ) ;
@@ -37,6 +34,9 @@ protected:
     /// released; send that information.
     virtual bool emit_mouse_release( Mouse::Button,
                                      const Mouse::Position & position ) ;
+
+protected:
+    Mouse_Emitter() ;
 
 private:
     Mouse_Emitter( const Mouse_Emitter & ) ;

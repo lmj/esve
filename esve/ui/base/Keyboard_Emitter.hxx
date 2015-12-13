@@ -21,9 +21,6 @@ class Keyboard_Emitter
 public:
     ~Keyboard_Emitter() ;
 
-protected:
-    Keyboard_Emitter() ;
-
     /// @brief You have somehow figured out that a key was pushed;
     /// send that information.
     virtual bool emit_key_push( Keyboard::Key ) ;
@@ -36,6 +33,9 @@ protected:
     /// released (as far as the application is concerned); send that
     /// information.
     virtual bool emit_key_release_all() ;
+
+protected:
+    Keyboard_Emitter() ;
 
 private:
     Keyboard_Emitter( const Keyboard_Emitter & ) ;

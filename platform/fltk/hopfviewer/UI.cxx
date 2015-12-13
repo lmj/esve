@@ -7,6 +7,7 @@
 
 #include "UI.hxx"
 #include "help/help_text.hxx"
+#include <esve/ui/base/Display.hxx>
 #include <esve/platform/Representation.hxx>
 #include <esve/platform/MF_Widget.hxx>
 #include <esve/math/misc.hxx>
@@ -21,6 +22,7 @@
 #include <limits>
 #include <memory>
 
+using esve::ui::base::Keyboard_Emitter ;
 using esve::platform::Representation ;
 using esve::platform::MF_Widget ;
 using esve::math::misc::fmodp ;
@@ -86,13 +88,17 @@ struct UI::Private
             
             switch( fl_args )
             {
-            case FL_FOCUS:
-            case FL_UNFOCUS:
             case FL_KEYDOWN:
             case FL_KEYUP:
                 // send key events to the camera
                 m.camera->handle(fl_args) ;
                 ret = 1 ;
+                break ;
+
+            case FL_UNFOCUS:
+                m.emitter.emit_key_release_all() ;
+                ret = 1 ;
+                break ;
             }
             
             return ret ;
@@ -117,6 +123,7 @@ struct UI::Private
     } ;
 
     UI & outside ;
+    Keyboard_Emitter & emitter ;
     Fl_Window* camera ;
     Camera_Stats camera_stats ;
     Fl_Text_Display* help_display ;
@@ -174,7 +181,7 @@ struct UI::Private
     Fl_Value_Input* autoquad ;
     void autoquad_callback() ;
 
-    Private( UI &, Fl_Window* ) ;
+    Private( UI &, Keyboard_Emitter &, Fl_Window* ) ;
 
 private:
     Private( const Private & ) ;
@@ -183,8 +190,10 @@ private:
 
 UI::Private::
 Private( UI & outside_,
+         Keyboard_Emitter & emitter_,
          Fl_Window* camera_ )
     : outside(outside_),
+      emitter(emitter_),
       camera(camera_),
       camera_stats(0, 0, 0, 0),
       help_display(0),
@@ -220,6 +229,7 @@ Private( UI & outside_,
 UI::
 UI( esve::ui::base::Display & display )
     : m(new UI::Private(*this,
+                        display,
                         &Representation::rep(display)))
 {
     m->is_fullscreen = false ;

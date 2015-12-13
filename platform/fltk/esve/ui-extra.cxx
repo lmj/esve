@@ -397,12 +397,17 @@ try
     {
     case FL_KEYDOWN:
     case FL_KEYUP:
-    case FL_FOCUS:
-    case FL_UNFOCUS:
         {
             m.camera_data.fl_window->handle(fl_args) ;
             ret = 1 ;
         }
+        break ;
+    case FL_UNFOCUS:
+        {
+            m.camera_data.display.emit_key_release_all() ;
+            ret = 1 ;
+        }
+        break ;
     }
     
     return ret ;
