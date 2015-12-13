@@ -1,3 +1,4 @@
+.PHONY : distclean config rebuild
 
 DIRS = \
 	esve \
@@ -8,16 +9,14 @@ DIRS = \
 include make/Makefile.node
 
 distclean : 
-	(test -e Makefile.defs && $(MAKE) depclean clean) || true
-	(test -e Makefile.defs && cd test && $(MAKE) depclean clean) || true
-	find . \( -name "*.o" -or -name Makefile.dep \) -exec rm \{} \;
-	rm -f Makefile.defs
-	rm -f config.* configure
-	rm -rf autom4te.cache
-	rm -f warnings warnings-compile
-	rm -rf documentation/esve
-	rm -rf documentation/code
-	rm -rf documentation/topeviewer-data
+	git clean -fdx
+
+config :
+	autoconf
+	./configure
+
+rebuild : distclean config
+	make
 
 doc : 
 	rm -rf documentation/code
@@ -48,7 +47,7 @@ warnings :
 	cat warnings-compile | $(SHELL) make/warnings-filter.sh > warnings
 
 debug-compile :
-	$(MAKE) all OPTIMIZE="-g -O -D_GLIBCXX_DEBUG"
+	$(MAKE) all OPTIMIZE="-g -O -D_GLIBCXX_DEBUG -DESVE_DIAGNOSTIC -DESVE_DEMANGLE"
 
 sync :
 	ruby make/message.rb
