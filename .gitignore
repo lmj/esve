@@ -1,0 +1,10 @@
+
+.gitignore
+*.o
+*.a
+Makefile.dep
+Makefile.defs
+autom4te.cache
+config.log
+config.status
+configure
