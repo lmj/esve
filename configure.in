@@ -10,10 +10,14 @@ if test "x$CFLAGS" = "x" ; then
 fi
 
 ############################################
-# find a C++ compiler
+# find fltk-config
 ############################################
 
-AC_PROG_CXX
+AC_PATH_PROG(FLTK_CONFIG, fltk-config)
+
+if test "x$FLTK_CONFIG" = "x"; then
+    AC_MSG_ERROR(could not find fltk-config in your path)
+fi
 
 ############################################
 # find an archiver
@@ -64,106 +68,12 @@ AC_CHECK_FUNCS(
 	AC_MSG_ERROR(could not find times()))
 
 ############################################
-# math
-############################################
-
-LIBS="-lm $LIBS"
-        
-
-if test `uname` = "Darwin"; then
-    ############################################
-    # Darwin -- set libs manually
-    ############################################
-
-    LIBS="$LIBS -framework AGL -framework OpenGL -framework Carbon"
-    CPPFLAGS="$CPPFLAGS -I/opt/local/include"
-    CFLAGS="$CFLAGS -I/opt/local/include"
-    LDFLAGS="$LDFLAGS -L/opt/local/lib"
-else
-    ############################################
-    # find X
-    ############################################
-
-    AC_PATH_XTRA
-    LIBS="$X_PRE_LIBS -lX11 $X_EXTRA_LIBS $LIBS"
-    CFLAGS="$CFLAGS $X_CFLAGS"
-    LDFLAGS="$X_LIBS $LDFLAGS"
-
-    ############################################
-    # find Xft
-    ############################################
-
-    AC_CHECK_LIB(
-        Xft,
-        XftFontOpen)
-
-    ############################################
-    # find Xinerama
-    ############################################
-
-    AC_CHECK_LIB(
-        Xinerama,
-        XineramaIsActive)
-
-    ############################################
-    # find GL
-    ############################################
-
-    AC_CHECK_HEADER(
-        GL/gl.h,
-        ,
-        AC_MSG_ERROR(could not find GL/gl.h))
-
-    AC_CHECK_LIB(
-        GL,
-        glBegin,
-        ,
-        AC_MSG_ERROR(could not find GL library))
-
-    ############################################
-    # find GLU
-    ############################################
-
-    AC_CHECK_HEADER(
-        GL/glu.h,
-        ,
-        AC_MSG_ERROR(could not find GL/glu.h))
-	
-    AC_CHECK_LIB(
-        GLU,
-        gluPerspective,
-        ,
-        AC_MSG_ERROR(could not find GLU library))
-fi
-
-############################################
-# find fltk
-############################################
-
-AC_LANG(C++)
-
-AC_CHECK_HEADER(
-	FL/Fl.H,
-	,
-	AC_MSG_ERROR(could not find fltk headers))
-
-AC_CHECK_LIB(
-	fltk,
-	fl_numericsort,
-	,
-	AC_MSG_ERROR(could not find fltk library))
-
-LIBS="-lfltk_gl $LIBS"
-
-AC_LANG(C)
-
-############################################
 # optimizations
 ############################################
 
 OPTIMIZE=""
 
-if test -n "$GXX"; then
+if test `fltk-config --cxx` = "g++"; then
    OPTIMIZE="-O3 -ffast-math -fomit-frame-pointer -DNDEBUG $OPTIMIZE"
 else
    OPTIMIZE="-O2 $OPTIMIZE"

@@ -1,9 +1,9 @@
 
-CXX      = @CXX@
+CXX      = $(shell fltk-config --cxx)
 
 ARCHIVE  = @ARCHIVE@
 
-INC_DIRS =
+INC_DIRS = -I$(shell fltk-config --prefix)/include
 
 LIB_DIRS =
 
@@ -13,7 +13,7 @@ WARNINGS =
 
 CFLAGS = $(OPTIMIZE) $(WARNINGS) @CFLAGS@ 
 
-LDFLAGS = $(CFLAGS) @LDFLAGS@ 
+LDFLAGS = $(CFLAGS)
 
 LD_EXEC = $(CXX)
 
@@ -37,4 +37,4 @@ LIB_SUFFIX = .a
 
 EXEC_SUFFIX =
 
-LIBS = @LIBS@
+LIBS = $(shell fltk-config --use-gl --ldflags)
