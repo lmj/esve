@@ -13,7 +13,7 @@ WARNINGS =
 
 CFLAGS = $(OPTIMIZE) $(WARNINGS) -DWIN32 -DWIN32_LEAN_AND_MEAN 
 
-LDFLAGS = $(CFLAGS) -mwindows 
+LDFLAGS = $(CFLAGS) -mwindows -static
 
 LD_EXEC = $(CXX)
 
@@ -46,4 +46,4 @@ LIBS = \
 	-lwsock32 \
 	-luuid \
 	-lwinmm \
-
+	-lcomctl32
