@@ -49,7 +49,7 @@ const int PANEL_MARGIN = 10 ;
 #endif
 
 const int PANEL_MIN_HEIGHT = 380 ;
-const int HELP_WIDTH = 500 ;
+const int HELP_WIDTH = 550 ;
 
 const std::string PANEL_LABEL = " " ;
 
