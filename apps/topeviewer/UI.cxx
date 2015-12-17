@@ -66,7 +66,7 @@ UI( Display & display )
     valuator(CAMERA_ZPOS).step(0.01) ;
     valuator(CAMERA_ZPOS).range(0.0, max) ;
 
-    valuator(CAMERA_FOV).step(0.1) ;
+    valuator(CAMERA_FOV).step(0.01) ;
     valuator(CAMERA_FOV).range(0.01, 179.9) ;
 }
 
