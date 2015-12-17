@@ -53,7 +53,7 @@ the fltk library (http://www.fltk.org).\n\
 \n\
 polynomialviewer is copyright (c) 2006 by James M. Lawrence.\n\
 All rights reserved.\n\
-<quixoticsycophant@gmail.com>\n\
+<llmjjmll@gmail.com>\n\
                                                                         \n\
                                                                         \n\
 " ;
