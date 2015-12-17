@@ -33,15 +33,15 @@ struct Plane_Spec : public esve::geom::dim3::Parametric_Surface_Spec
         return real(2)*unit_square - complex(1, 1) ;
     }
 
-    pure surface( const complex & unit_square,
+    pure surface( const complex & ,
                   const complex & domain ) const
     {
         return pure(size*domain.real(), size*domain.imag(), 0) ;
     }
 
-    rgba color( const complex & unit_square,
-                const complex & domain,
-                const pure & surface ) const
+    rgba color( const complex & ,
+                const complex & ,
+                const pure & ) const
     {
         return rgba(1, 1, 1, fade) ;
     }

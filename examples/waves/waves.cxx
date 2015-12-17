@@ -51,7 +51,7 @@ struct Waves : public Regular_Spec
                        domain_size.imag()*centered.imag()) ;
     }
 
-    pure surface( const complex & unit_square,
+    pure surface( const complex & ,
                   const complex & domain ) const
     {
         return pure(domain.real(),
@@ -68,8 +68,8 @@ struct Waves : public Regular_Spec
     }
 
     rgba color( const complex & unit_square,
-                const complex & domain,
-                const pure & surface ) const
+                const complex & ,
+                const pure & ) const
     {
         return
             rgba::from_hsva(

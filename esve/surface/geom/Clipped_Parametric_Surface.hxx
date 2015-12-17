@@ -156,7 +156,7 @@ private:
         {
         }
 
-        bool operator()( m_Mesh_Facets_const_iterator f ) const
+        bool operator()( m_Mesh_Facets_const_iterator ) const
         {
             return false ;
         }

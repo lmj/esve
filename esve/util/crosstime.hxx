@@ -52,7 +52,7 @@ namespace crosstime {
 #elif defined(USE_SYS_TIMES)
 
     typedef clock_t crosstime_t ;
-    const crosstime_t CROSSTIME_CLOCKS_PER_SEC = sysconf(_SC_CLK_TCK) ;
+    extern const crosstime_t CROSSTIME_CLOCKS_PER_SEC ;
 
 #elif defined(USE_WIN32_MMSYSTEM)
 

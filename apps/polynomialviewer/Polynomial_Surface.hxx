@@ -103,13 +103,13 @@ struct Polynomial_Surface_Spec
         return real(6)*unit_square - complex(real(3), real(3)) ;
     }
 
-    bool domain_clip( const complex & unit_square,
-                      const complex & domain ) const
+    bool domain_clip( const complex & ,
+                      const complex & ) const
     {
         return false ;
     }
 
-    quat surface( const complex & unit_square,
+    quat surface( const complex & ,
                   const complex & domain ) const
     {
         const complex fz =
@@ -123,15 +123,15 @@ struct Polynomial_Surface_Spec
                     refz_scale*fz.real()) ;
     }
 
-    bool surface_clip( const complex & unit_square,
-                       const complex & domain,
+    bool surface_clip( const complex & ,
+                       const complex & ,
                        const quat & surface ) const
     {
         return std::abs(surface.w()) >= realcurves_epsilon ;
     }
 
-    rgba color( const complex & unit_square,
-                const complex & domain,
+    rgba color( const complex & ,
+                const complex & ,
                 const quat & surface ) const
     {
         return rgba::from_hsva(

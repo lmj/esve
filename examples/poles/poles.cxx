@@ -50,7 +50,7 @@ public:
           m_scale_fz(1),
           m_scale_color(0.2) { }
 
-    quat surface( const complex & unit_square,
+    quat surface( const complex & ,
                   const complex & domain ) const
     {
         const complex fz =
@@ -66,8 +66,8 @@ public:
                     m_scale_fz*fz.real()) ;
     }
 
-    rgba color( const complex & unit_square,
-                const complex & domain,
+    rgba color( const complex & ,
+                const complex & ,
                 const quat & surface ) const
     {
         // color roots

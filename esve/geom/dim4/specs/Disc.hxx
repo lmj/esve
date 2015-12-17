@@ -25,9 +25,9 @@ public:
 
     explicit Disc( const Circle & disc ) ;
 
-    bool surface_clip( const complex & unit_square,
-                       const complex & domain,
-                       const quat & surface ) const
+    bool surface_clip( const complex & ,
+                       const complex & ,
+                       const quat & ) const
     {
         return false ;
     }

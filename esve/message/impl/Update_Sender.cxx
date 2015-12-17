@@ -48,7 +48,7 @@ struct Update_Sender::Private
     }
 
     static void call_send_update( message::Update_Sender & a,
-                                  double dt )
+                                  double )
     {
         Update_Sender::call_send_update(a) ;
     }

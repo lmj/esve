@@ -5,6 +5,8 @@ namespace esve { namespace util {
 
 namespace crosstime {
 
+const crosstime_t CROSSTIME_CLOCKS_PER_SEC = sysconf(_SC_CLK_TCK) ;
+
 crosstime_t
 crosstime()
 {

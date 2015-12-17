@@ -17,13 +17,13 @@ public:
     explicit Disc( const Circle & circle )
         : m_circle(circle) { }
 
-    bool domain_clip( const complex & unit_square,
+    bool domain_clip( const complex & ,
                       const complex & domain ) const
     {
         return abs(domain - m_circle.center()) > m_circle.radius() ;
     }
 
-    complex domain_snap( const complex & unit_square,
+    complex domain_snap( const complex & ,
                          const complex & domain ) const
     {
         const complex offset = domain - m_circle.center() ;

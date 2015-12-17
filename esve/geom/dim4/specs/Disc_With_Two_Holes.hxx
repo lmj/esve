@@ -47,9 +47,9 @@ public:
         super::hole<1>(circle) ;
     }
 
-    bool surface_clip( const complex & unit_square,
-                       const complex & domain,
-                       const quat & surface ) const
+    bool surface_clip( const complex & ,
+                       const complex & ,
+                       const quat & ) const
     {
         return false ;
     }

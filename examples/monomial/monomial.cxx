@@ -47,7 +47,7 @@ struct Monomial : public Polar_Annulus
           root_radius(0.0),
           scale_color(0.7) { }
 
-    quat surface( const complex & unit_square,
+    quat surface( const complex & ,
                   const complex & domain ) const
     {
         const complex fz =
@@ -59,9 +59,9 @@ struct Monomial : public Polar_Annulus
                     scale_fz*fz.real()) ;
     }
 
-    rgba color( const complex & unit_square,
+    rgba color( const complex & ,
                 const complex & domain,
-                const quat & surface ) const
+                const quat & ) const
     {
         return
             rgba::from_hsva(
