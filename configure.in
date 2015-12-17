@@ -20,6 +20,16 @@ if test "x$FLTK_CONFIG" = "x"; then
 fi
 
 ############################################
+# GNU make
+############################################
+
+AC_PATH_PROG(MAKE, make)
+case "`${MAKE} --version`" in
+"GNU"* ) : ;;
+* ) AC_MSG_ERROR([GNU Make is required]) ;;
+esac
+
+############################################
 # find an archiver
 ############################################
 
