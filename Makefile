@@ -16,7 +16,7 @@ config :
 	./configure
 
 rebuild : distclean config
-	make
+	$(MAKE)
 
 doc : 
 	rm -rf documentation/code
