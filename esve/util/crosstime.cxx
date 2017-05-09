@@ -5,7 +5,9 @@ namespace esve { namespace util {
 
 namespace crosstime {
 
+#if defined(USE_SYS_TIMES)
 const crosstime_t CROSSTIME_CLOCKS_PER_SEC = sysconf(_SC_CLK_TCK) ;
+#endif
 
 crosstime_t
 crosstime()
